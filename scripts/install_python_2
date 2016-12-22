@@ -24,6 +24,7 @@ sudo yum install -y xz-libs
 # We're going to download and compile in a new /opt/install_python_2 director
 sudo mkdir /opt/install_python_2
 cd /opt/install_python_2
+sudo chown centos:centos /opt/install_python_2
 
 # Download the Python 2.7.12 source
 curl -O https://www.python.org/ftp/python/2.7.12/Python-2.7.12.tar.xz
