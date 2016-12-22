@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+#
+# baseline
+#
+# All systems we work with should have some sane basline packages and updates
+
+# Update CentOS
+sudo yum -y update
+
+# Install the development tools bundle
+sudo yum groupinstall -y 'development tools'
