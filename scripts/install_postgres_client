@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+#
+# install_postgres_client
+#
+# This script installs only the PostgreSQL 9.5 client, not a PostgreSQL database server;
+# in cases where you need the PostgreSQL client to execute commands on a remote
+# PostgreSQL server, such as with Ruby's pg or Python's sqlAlchemy or psycopg, this is
+# what you want
+
+# Install the Postgres 9.5 client
+sudo yum -y install http://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-redhat95-9.5-2.noarch.rpm
+sudo yum -y install postgresql95-devel
+
+# N.B. the PostgreSQL binaries are located at /usr/pgsql-9.5/bin
+
