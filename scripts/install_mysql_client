@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+#
+# install_mysql_client
+#
+# This script installs only the MySQL 5.7 client, not a MySQL database server;
+# in cases where you need the MySQL client to execute commands on a remote
+# MySQL server, such as with Ruby's pg or Python's sqlAlchemy or psycopg, this is
+# what you want
+
+# Create a temporary directory at /tmp/install_mysql_client
+mkdir /tmp/install_mysql_client
+cd /tmp/install_mysql_client
+
+# Download the MySQL client from Oracle
+curl -L -O https://dev.mysql.com/get/mysql57-community-release-el7-9.noarch.rpm
+
+# Install the MySQL 5.7 client
+sudo rpm -ivh mysql57-community-release-el7-9.noarch.rpm
+sudo yum -y install mysql-devel
+
+# Delete the temporary directory, since we're done with it
+rm -rf /tmp/install_mysql_client
