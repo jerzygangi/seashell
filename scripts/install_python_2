@@ -21,10 +21,9 @@ sudo yum install -y zlib-dev openssl-devel sqlite-devel bzip2-devel
 # so we install a package to unzip those kinds of files
 sudo yum install -y xz-libs
 
-# We're going to download and compile in a new /opt/install_python_2 director
-sudo mkdir /opt/install_python_2
-cd /opt/install_python_2
-sudo chown centos:centos /opt/install_python_2
+# We're going to download and compile in a new /tmp/install_python_2 director
+mkdir /tmp/install_python_2
+cd /tmp/install_python_2
 
 # Download the Python 2.7.12 source
 curl -O https://www.python.org/ftp/python/2.7.12/Python-2.7.12.tar.xz
@@ -34,10 +33,11 @@ xz -d Python-2.7.12.tar.xz
 tar -xvf Python-2.7.12.tar
 
 # Configure, build, and install Python
-cd /opt/install_python_2/Python-2.7.12
+cd /tmp/install_python_2/Python-2.7.12
 ./configure --prefix=/usr/local
 make
 sudo make altinstall
+cd /tmp/install_python_2
 
 # Install setuptools
 curl https://bootstrap.pypa.io/ez_setup.py -o - | sudo /usr/local/bin/python2.7
@@ -48,5 +48,5 @@ curl https://bootstrap.pypa.io/get-pip.py | sudo /usr/local/bin/python2.7
 # Install virtualenv
 sudo /usr/local/bin/pip install virtualenv
 
-# Clean up the /opt/install_python_2 folder since we're done with it
-sudo rm -rf /opt/install_python_2
+# Clean up the /tmp/install_python_2 folder since we're done with it
+rm -rf /tmp/install_python_2
