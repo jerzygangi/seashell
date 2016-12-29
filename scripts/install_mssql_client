@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+#
+# install_mssql_client
+#
+# This script installs only the Microsoft SQL client, not a Microsoft SQL database
+# server; in cases where you need the Microsoft SQL client to execute commands on
+# a remote Microsoft SQL server, such as with Ruby's TinyTDS or Python's pymssql,
+# this is what you want
+
+# Install the Microsoft SQL client
+sudo rpm -ivh http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+sudo yum -y install freetds-devel
+
