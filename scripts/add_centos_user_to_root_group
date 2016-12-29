@@ -1,0 +1,13 @@
+
+#!/usr/bin/env bash
+
+#
+# add_centos_user_to_root_group
+#
+# Our main `centos` user account needs to be able to do root-y stuff, like read
+# and write directories that are owned by the `root` group; this script makes
+# that possible
+#
+
+sudo usermod -a -G root centos
+
