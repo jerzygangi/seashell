@@ -5,7 +5,7 @@
 #
 # This script installs only the MySQL 5.7 client, not a MySQL database server;
 # in cases where you need the MySQL client to execute commands on a remote
-# MySQL server, such as with Ruby's pg or Python's sqlAlchemy or psycopg, this is
+# MySQL server, such as with Ruby's mysql2 or Python's sqlAlchemy, this is
 # what you want
 
 # Create a temporary directory at /tmp/install_mysql_client
