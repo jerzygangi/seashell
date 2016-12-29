@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+#
+# install_airflow
+#
+# Install Airflow, with all Airflow packages
+
+# Set up a virtualenv for Airflow
+cd /opt/virtualenvs
+virtualenv airflow
+
+# Put a symlink to pg_config in the virtualenv where Airflow can find it
+ln -s /usr/pgsql-9.5/bin/pg_config /opt/virtualenvs/airflow/bin/pg_config
+
+# Install libffi-dev
+# (required for Airflow's crypto package)
+sudo rpm -i ftp://195.220.108.108/linux/centos/7.3.1611/os/x86_64/Packages/libffi-devel-3.0.13-18.el7.x86_64.rpm
+sudo yum -y install libffi-devel
+
+# Make Airflow's home directory
+mkdir /opt/airflow
+echo export AIRFLOW_HOME=/opt/airflow >> /home/centos/.bash_profile
+
+# Install Airflow, with all Airflow packages
+/opt/virtualenvs/airflow/bin/pip install airflow[all]
+
+# Initialize the Airflow database
+/opt/virtualenvs/airflow/bin/airflow initdb
+
+# N.B., this is how you start the Airflow web server:
+# /opt/virtualenvs/airflow/bin/airflow webserver -p 8080
+
