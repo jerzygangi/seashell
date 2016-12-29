@@ -21,7 +21,7 @@ sudo yum install -y zlib-dev openssl-devel sqlite-devel bzip2-devel
 # so we install a package to unzip those kinds of files
 sudo yum install -y xz-libs
 
-# We're going to download and compile in a new /tmp/install_python_2 director
+# We're going to download and compile in a new /tmp/install_python_2 directory
 mkdir /tmp/install_python_2
 cd /tmp/install_python_2
 
