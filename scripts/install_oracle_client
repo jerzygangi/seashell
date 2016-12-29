@@ -26,3 +26,6 @@ echo export ORACLE_HOME=/usr/lib/oracle/12.1/client64 >> /home/centos/.bash_prof
 echo export PATH=$PATH:$ORACLE_HOME/bin >> /home/centos/.bash_profile
 echo export LD_LIBRARY_PATH=$ORACLE_HOMeE/lib >> /home/centos/.bash_profile
 
+# Delete the temporary directory, since we're done with it
+rm -rf /tmp/install_oracle_client
+
