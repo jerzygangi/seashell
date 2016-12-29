@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+#
+# install_oracle_client
+#
+# This script installs only the Oracle Instantclient 12.1 client, not an Oracle
+# database server; in cases where you need the Oracle client to execute commands
+# on a remote Oracle server, such as with Ruby's oci8 or Python's cx_Oracle, this
+# is what you want
+
+# Create a temporary directory at /tmp/install_oracle_client
+mkdir /tmp/install_oracle_client
+cd /tmp/install_oracle_client
+
+# Download the Oracle Instantclient from an insecure FTP server in Japan
+# (review Oracle's TOS to determine your compliance)
+curl -O http://ftp.riken.jp/Linux/cern/centos/7/cernonly/x86_64/Packages/oracle-instantclient12.1-basic-12.1.0.2.0-1.x86_64.rpm
+curl -O http://ftp.riken.jp/Linux/cern/centos/7/cernonly/x86_64/Packages/oracle-instantclient12.1-devel-12.1.0.2.0-1.x86_64.rpm
+curl -O http://ftp.riken.jp/Linux/cern/centos/7/cernonly/x86_64/Packages/oracle-instantclient12.1-sqlplus-12.1.0.2.0-1.x86_64.rpm
+
+# Install the Oracle Instantclient
+sudo yum -y localinstall oracle* --nogpgcheck
+
+# Add the Oracle binaries and libraries to some required environmental variables
+echo export ORACLE_HOME=/usr/lib/oracle/12.1/client64 >> /home/centos/.bash_profile
+echo export PATH=$PATH:$ORACLE_HOME/bin >> /home/centos/.bash_profile
+echo export LD_LIBRARY_PATH=$ORACLE_HOMeE/lib >> /home/centos/.bash_profile
+
