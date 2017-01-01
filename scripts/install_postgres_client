@@ -13,7 +13,7 @@ sudo yum -y install http://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-redh
 sudo yum -y install postgresql95-devel
 
 # Add the PostgreSQL 9.5 client binaries to the $PATH 
-echo export PATH=$PATH:/usr/pgsql-9.5/bin >> /home/centos/.bash_profile
+echo export PATH=\$PATH:/usr/pgsql-9.5/bin >> /home/centos/.bash_profile
 
 # N.B. the PostgreSQL binaries are located at /usr/pgsql-9.5/bin
 
