@@ -3,8 +3,8 @@
 #
 # install_nginx
 #
-# This script installs a vanilla Nginx; if you plan to run a web server, a reverse
-# proxy, load balancer, or cache, you'll probably need this
+# This script installs a vanilla Nginx, for use as a web server, reverse
+# proxy, load balancer, or cache
 
 # Install Nginx
 sudo yum -y install epel-release
