@@ -10,6 +10,53 @@
 sudo yum -y install epel-release
 sudo yum -y install nginx
 
+# Create a generic parent Nginx configuration that serves multipurpose use
+# by delegating services to /etc/nginx/conf.d/*.conf files
+sudo rm /etc/nginx/nginx.conf 2> /dev/null
+cat << EOF | sudo tee /etc/nginx/nginx.conf
+# Run Nginx as the user \`nginx\` on this machine
+user nginx;
+
+# Nginx will run as many processes as cores we have on the CPU
+worker_processes auto;
+
+# Set the Nginx log file
+error_log /var/log/nginx/error.log;
+
+# Set the Nginx pid file
+pid /run/nginx.pid;
+
+# Nginx should load modules from the standard directory
+include /usr/share/nginx/modules/*.conf;
+
+# Allow each worker process to open up to 1024 connections
+events {
+    worker_connections 1024;
+}
+
+# Define our basic HTTP server
+http {
+    log_format  main  '\$remote_addr - \$remote_user [\$time_local] "\$request" '
+                      '\$status \$body_bytes_sent "\$http_referer" '
+                      '"\$http_user_agent" "\$http_x_forwarded_for"';
+    access_log  /var/log/nginx/access.log  main;
+    sendfile            on;
+    tcp_nopush          on;
+    tcp_nodelay         on;
+    keepalive_timeout   65;
+    types_hash_max_size 2048;
+    include             /etc/nginx/mime.types;
+    default_type        application/octet-stream;
+
+    # Allow long server names, and collections of server names, in the conf.d/*.conf files
+    server_names_hash_bucket_size  64;
+
+    # If you want to run a server, reverse proxy, load balancer, or cache, create a file in
+    # this directory; Nginx will load all of them
+    include /etc/nginx/conf.d/*.conf;
+}
+EOF
+
 # Start Nginx now
 sudo systemctl start nginx
 
