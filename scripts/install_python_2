@@ -6,6 +6,20 @@
 # Set up a basic install of Python 2 (2.7.12, specifically), complete with setuptools, pip, and virtualenv
 # (Why would anyone want Python without setuptools, pip, and virtualenv?)
 #
+# This script builds Python without the following libraries; in the future, we should probably add them in:
+# - Tcl/Tk
+# - _bsddb
+# - _curses
+# - _curses_panel
+# - _tkinter
+# - bsddb185
+# - dbm
+# - dl
+# - gdbm
+# - imageop
+# - readline
+# - sunaudiodev
+#
 # Inspiration:
 # - https://www.digitalocean.com/community/tutorials/how-to-set-up-python-2-7-6-and-3-3-3-on-centos-6-4
 
