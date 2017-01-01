@@ -14,6 +14,7 @@ sudo yum -y install postgresql95-devel
 
 # Add the PostgreSQL 9.5 client binaries to the $PATH 
 echo export PATH=\$PATH:/usr/pgsql-9.5/bin >> /home/centos/.bash_profile
+source /home/centos/.bash_profile
 
 # N.B. the PostgreSQL binaries are located at /usr/pgsql-9.5/bin
 
