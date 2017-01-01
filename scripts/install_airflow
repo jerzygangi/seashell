@@ -9,9 +9,6 @@
 cd /opt/virtualenvs
 virtualenv airflow
 
-# Put a symlink to pg_config in the virtualenv where Airflow can find it
-ln -s /usr/pgsql-9.5/bin/pg_config /opt/virtualenvs/airflow/bin/pg_config
-
 # Install libffi-dev
 # (required for Airflow's crypto package)
 sudo rpm -i http://195.220.108.108/linux/centos/7.3.1611/os/x86_64/Packages/libffi-devel-3.0.13-18.el7.x86_64.rpm
