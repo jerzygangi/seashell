@@ -1,0 +1,134 @@
+#!/usr/bin/env bash
+
+#
+# create_reverse_proxy
+#
+# Install a reverse proxy within Nginx; this is how you funnel a Ruby, Python,
+# Node, etc. application server process through Nginx
+
+# Set the default arguments
+upstream_address=
+upstream_shortname=
+urls_to_respond_to=
+path_at_url_to_listen_at="/"
+
+# Keep track of the original arguments passed to this script
+original_arguments=()
+for param in "$@"; do
+  original_arguments+=("$param")
+done
+
+# Explain how to use this script
+usage(){
+	cat <<- EOF
+
+	Usage: fruit_calculator [options]
+
+	Options:
+		-a, --upstream_address <ip_address_and_port_without_http>  The address of the upstream service we are reverse proxying
+		-s, --upstream_shortname <shortname>                       A shorthand name for the upstream; 1 word, no spaces
+		-u, --urls_to_respond_to <space_delimited_urls_in_quotes>  The URLs that Nginx should listen for to trigger this reverse proxy
+		-p, --path_at_url_to_listen_at <path>                      The path at the URL's to listen to; e.g., /blog
+
+	EOF
+}
+
+# If the user asks for help, print out the usage
+set -- "${original_arguments[@]}"
+while [ "$1" != "" ]; do
+  case $1 in
+    -h | --help )
+      usage
+      exit
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
+
+# Capture the command line arguements from the user
+set -- "${original_arguments[@]}"
+while [ "$1" != "" ]; do
+  case $1 in
+    -a | --upstream_address )
+      shift
+      upstream_address=$1
+      shift
+      ;;
+    -s | --upstream_shortname )
+      shift
+      upstream_shortname=$1
+      shift
+      ;;
+    -u | --urls_to_respond_to)
+      shift
+      urls_to_respond_to=$1
+      shift
+      ;;
+    -p | --path_at_url_to_listen_at)
+      shift
+      path_at_url_to_listen_at=$1
+      shift
+      ;;
+    *)
+      usage
+      exit 1
+  esac
+done
+
+# Ensure we have the upstream address, upstream shortname, urls to respond to, and path at url to listen at
+# before we proceed
+if [ -z $upstream_address ]; then
+  echo "The upstream address must be set; use -a or --upstream_address"
+  exit 1
+fi
+if [ -z $upstream_shortname ]; then
+  echo "The upstream shortname must be set; use -s or --upstream_shortname"
+  exit 1
+fi
+if [ -z $urls_to_respond_to ]; then
+  echo "The urls to respond to must be set; use -u or --urls_to_respond_to"
+  exit 1
+fi
+if [ -z $path_at_url_to_listen_at ]; then
+  echo "The path at url to listen at must be set; use -p or --path_at_url_to_listen_at"
+  exit 1
+fi
+
+# Allow Nginx to initiate network connections to the upstream services we are
+# proxying (e.g., Ruby, Python, Node, etc.); required by SELinux
+# See: http://notes.jerzygangi.com/fixing-nginx-connect-failed-13-permission-denied-while-connecting-to-upstream/
+sudo setsebool -P httpd_can_network_connect 1
+
+# Create a reverse proxy using Nginx
+sudo rm /etc/nginx/conf.d/airflow.conf 2> /dev/null
+cat << EOF | tee /etc/nginx/conf.d/airflow.conf
+# Reverse proxy for $upstream_shortname
+upstream $upstream_shortname {
+  server $upstream_address;
+}
+
+server {
+  listen 80;
+  listen [::]:80;
+  server_name $urls_to_respond_to;
+
+  access_log  /var/log/nginx/$upstream_shortname.access.log;
+  error_log   /var/log/nginx/$upstream_shortname.error.log;
+
+  proxy_buffers 16 64k;
+  proxy_buffer_size 256k;
+
+  location / {
+    proxy_pass  http://$upstream_shortname;
+    proxy_redirect off;
+
+    proxy_set_header    Host            \$host;
+    proxy_set_header    X-Real-IP       \$remote_addr;
+    proxy_set_header    X-Forwarded-For \$proxy_add_x_forwarded_for;
+  }
+}
+
+EOF
+
