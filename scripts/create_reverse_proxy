@@ -103,7 +103,7 @@ sudo setsebool -P httpd_can_network_connect 1
 
 # Create a reverse proxy using Nginx
 sudo rm /etc/nginx/conf.d/airflow.conf 2> /dev/null
-cat << EOF | tee /etc/nginx/conf.d/airflow.conf
+cat << EOF | sudo tee /etc/nginx/conf.d/airflow.conf
 # Reverse proxy for $upstream_shortname
 upstream $upstream_shortname {
   server $upstream_address;
