@@ -11,6 +11,7 @@ upstream_address=
 upstream_shortname=
 urls_to_respond_to=
 path_at_url_to_listen_at="/"
+port=80
 
 # Keep track of the original arguments passed to this script
 original_arguments=()
@@ -29,6 +30,7 @@ usage(){
 		-s, --upstream_shortname <shortname>                       A shorthand name for the upstream; 1 word, no spaces
 		-u, --urls_to_respond_to <space_delimited_urls_in_quotes>  The URLs that Nginx should listen for to trigger this reverse proxy
 		-p, --path_at_url_to_listen_at <path>                      The path at the URL's to listen to; e.g., /blog
+    -t, --port <number>                                        The port that Nginx will listen on, both IPv4 & IPv6
 
 	EOF
 }
@@ -61,24 +63,28 @@ while [ "$1" != "" ]; do
       upstream_shortname=$1
       shift
       ;;
-    -u | --urls_to_respond_to)
+    -u | --urls_to_respond_to )
       shift
       urls_to_respond_to=$1
       shift
       ;;
-    -p | --path_at_url_to_listen_at)
+    -p | --path_at_url_to_listen_at )
       shift
       path_at_url_to_listen_at=$1
       shift
       ;;
+    -t | --port )
+      shift
+      port=$1
+      shift
     *)
       usage
       exit 1
   esac
 done
 
-# Ensure we have the upstream address, upstream shortname, urls to respond to, and path at url to listen at
-# before we proceed
+# Ensure we have the upstream address, upstream shortname, urls to respond to, path at url to listen at,
+# and port before we proceed
 if [ -z $upstream_address ]; then
   echo "The upstream address must be set; use -a or --upstream_address"
   exit 1
@@ -95,6 +101,10 @@ if [ -z $path_at_url_to_listen_at ]; then
   echo "The path at url to listen at must be set; use -p or --path_at_url_to_listen_at"
   exit 1
 fi
+if [ -z $port ]; then
+  echo "The port to listen on must be set; use -t or --port"
+  exit 1
+fi
 
 # Allow Nginx to initiate network connections to the upstream services we are
 # proxying (e.g., Ruby, Python, Node, etc.); required by SELinux
@@ -102,16 +112,16 @@ fi
 sudo setsebool -P httpd_can_network_connect 1
 
 # Create a reverse proxy using Nginx
-sudo rm /etc/nginx/conf.d/airflow.conf 2> /dev/null
-cat << EOF | sudo tee /etc/nginx/conf.d/airflow.conf
+sudo rm /etc/nginx/conf.d/$upstream_shortname.conf 2> /dev/null
+cat << EOF | sudo tee /etc/nginx/conf.d/$upstream_shortname.conf
 # Reverse proxy for $upstream_shortname
 upstream $upstream_shortname {
   server $upstream_address;
 }
 
 server {
-  listen 80;
-  listen [::]:80;
+  listen $port;
+  listen [::]:$port;
   server_name $urls_to_respond_to;
 
   access_log  /var/log/nginx/$upstream_shortname.access.log;
