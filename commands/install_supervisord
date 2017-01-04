@@ -59,6 +59,7 @@ sudo chown centos:centos /var/log/supervisord
 
 # Make a directory where we'll store daemon configuration files for Supervisord
 mkdir /etc/supervisord.d/conf.d
+sudo chown centos:centos /etc/supervisord.d/conf.d
 
 # Finally, start Supervisord
 supervisord
