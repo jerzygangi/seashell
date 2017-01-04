@@ -34,7 +34,7 @@ And, really, do you *need* multiple versions of Nginx? :)
 ## Why does the world need Seashell?
 We are a quickly growing group of developers who think you shouldn't have to read a 500 page book to bootstrap a server. We have paid expensive Puppet/Chef/Ansible/Salt consultants, attended conferences, and hired trainers. At the end of the day, we think a Bash script is easier, faster, and cheaper.
 
-Moreover, the dawn of disposable infrastructure has brought with it fundamental changes to managing servers. Servers today are in a rotating cluster; they are virtualized; they are in the cloud; they are controlled with an API. Rather than trying to keep servers alive for years, we measure in hours. For this reason, we see servers as diapers: to be opened up, to be used, and discarded.
+Moreover, the dawn of disposable infrastructure has brought with it fundamental changes to managing servers. Servers today are in a rotating cluster; they are virtualized; they are in the cloud; they are controlled with an API. Rather than trying to keep servers alive for years, we measure in hours. For this reason, we see servers as diapers: to be opened up, used, and discarded.
 
 ## Who is Seashell for?
 - Busy developers
