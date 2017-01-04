@@ -94,7 +94,7 @@ if [ -z $upstream_shortname ]; then
   echo "The upstream shortname must be set; use -s or --upstream_shortname"
   exit 1
 fi
-if [ -z $urls_to_respond_to ]; then
+if [ -z "$urls_to_respond_to" ]; then
   echo "The urls to respond to must be set; use -u or --urls_to_respond_to"
   exit 1
 fi
