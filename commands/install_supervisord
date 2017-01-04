@@ -48,7 +48,7 @@ files = /etc/supervisord.d/conf.d/*.ini
 EOF
 
 # For some odd reason, CentOS ships with a /var/log/supervisor directory, which will
-# only confuse us in the future
+# only confuse us in the future; let's delete it
 sudo rm -rf /var/log/supervisor
 
 # Let's create a directory where we'll store log files
