@@ -13,7 +13,9 @@ Seashell is a configuration management toolkit for bootstrapping disposable infr
 ## How does Seashell work?
 Seashell is a collection of popular sysadmin tasks: installing Nginx, installing Python, setting up a daemon, etc. Rather than trying to support a million different versions of Nginx, or a million different ways to set up a daemon, Seashell uses the most popular, stable way. Because we limit package versions, **you can install any combination of services, and everything is compatible with everything else -- guaranteed.** If you've ever set up a server, this will make you cry in joy.
 
-If you use Seashell, it makes sense to do everything the Seashell way because it just works. And, really, do you *need* multiple versions of Nginx? :)
+If you use Seashell, it makes sense to do everything the Seashell way because it just works.
+
+And, really, do you *need* multiple versions of Nginx? :)
 
 ## What can Seashell do?
 - Bootstrap CentOS 7
@@ -32,7 +34,7 @@ If you use Seashell, it makes sense to do everything the Seashell way because it
 ## Why does the world need Seashell?
 We are a quickly growing group of developers who think you shouldn't have to read a 500 page book to bootstrap a server. We have paid expensive Puppet/Chef/Ansible/Salt consultants, attended conferences, and hired trainers. At the end of the day, we think a Bash script is easier, faster, and cheaper.
 
-Moreover, the dawn of disposable infrastructure has brought with it fundamental changes to managing servers. Servers today are in a rotating cluster; they are virtualized; they are in the cloud; they are controlled with an API. Rather than trying to keep servers alive for years, we measure in hours. For this reason, we see servers as diapers: to be used, and discarded.
+Moreover, the dawn of disposable infrastructure has brought with it fundamental changes to managing servers. Servers today are in a rotating cluster; they are virtualized; they are in the cloud; they are controlled with an API. Rather than trying to keep servers alive for years, we measure in hours. For this reason, we see servers as diapers: to be opened up, to be used, and discarded.
 
 ## Who is Seashell for?
 - Busy developers
@@ -45,24 +47,9 @@ Moreover, the dawn of disposable infrastructure has brought with it fundamental 
 - People who like spending a lot of time setting up servers
 - People who want to run the same idempotent commands over and over again
 
-## Can I use Seashell for some things, but not everything?
-Yes.
+## How do I change a server once I bootstrap it?
+Destroy the server, and rebootstrap a new one how you'd like it. Seashell is opinionated software that views modifying servers as a primary source of issues and incompatabilities. When a server finishes a successful bootstrap, it enters an unknown state; we, therefore, eschew uninstalling, reinstalling, reconfiguring, and modifying existing infrastructure because it builds on an unknown state. We believe in leveraging the disposable nature of servers to maintain simplicity and reliability.
 
-## How much does Seashell cost? Do you sell support?
-Free, and no.
-
-## How do I upgrade packages?
-Rebootstrap the server.
-
-## How do I uninstall packages?
-Rebootstrap the server.
-
-## How do I change configuration files?
-Rebootstrap the server.
-
-## What version of Python do you use? of Airflow? of PostgreSQL? of Redis?
-We carefully select the most stable, current version of each package *that is compatible with everything else*. We will not, ever, support multiple versions of the same package, as it violates our core ethic.
-
-## You don't have xxxxx. How do I add it?
-Submit a pull request.
+## What version of packages do you use?
+We carefully select the most stable, current version of each package *that is compatible with everything else*. We will not, ever, support multiple versions of the same package, as it violates our core ethic of convention over configuration.
 
