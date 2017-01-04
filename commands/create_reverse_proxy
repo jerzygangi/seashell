@@ -23,14 +23,14 @@ done
 usage(){
 	cat <<- EOF
 
-	Usage: fruit_calculator [options]
+	Usage: create_reverse_proxy [options]
 
 	Options:
 		-a, --upstream_address <ip_address_and_port_without_http>  The address of the upstream service we are reverse proxying
 		-s, --upstream_shortname <shortname>                       A shorthand name for the upstream; 1 word, no spaces
 		-u, --urls_to_respond_to <space_delimited_urls_in_quotes>  The URLs that Nginx should listen for to trigger this reverse proxy
 		-p, --path_at_url_to_listen_at <path>                      The path at the URL's to listen to; e.g., /blog
-    -t, --port <number>                                        The port that Nginx will listen on, both IPv4 & IPv6
+		-t, --port <number>                                        The port that Nginx will listen on, both IPv4 & IPv6
 
 	EOF
 }
@@ -77,6 +77,7 @@ while [ "$1" != "" ]; do
       shift
       port=$1
       shift
+      ;;
     *)
       usage
       exit 1
