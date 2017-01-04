@@ -55,6 +55,7 @@ http {
     # this directory; Nginx will load all of them
     include /etc/nginx/conf.d/*.conf;
 }
+
 EOF
 
 # Start Nginx now
@@ -67,3 +68,4 @@ sudo systemctl enable nginx
 # sudo systemctl start nginx
 # sudo systemctl stop nginx
 # sudo systemctl reload nginx
+
