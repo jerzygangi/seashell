@@ -66,4 +66,4 @@ sudo systemctl enable nginx
 # N.B. This is how you should start and stop Nginx in the future
 # sudo systemctl start nginx
 # sudo systemctl stop nginx
-
+# sudo systemctl reload nginx
