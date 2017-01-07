@@ -35,7 +35,7 @@ source /home/centos/.bash_profile
 cat << EOF | sudo tee /opt/start_airflow
 #!/usr/bin/env bash
 
-VIRTUAL_ENV="/opt/virtualenvs/airflow" PATH="$VIRTUAL_ENV/bin:$PATH" AIRFLOW_HOME=/opt/airflow /opt/virtualenvs/airflow/bin/airflow webserver -p 8080
+VIRTUAL_ENV="/opt/virtualenvs/airflow" PATH="\$VIRTUAL_ENV/bin:\$PATH" AIRFLOW_HOME=/opt/airflow /opt/virtualenvs/airflow/bin/airflow webserver -p 8080
 
 EOF
 sudo chown centos:centos /opt/start_airflow
