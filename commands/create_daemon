@@ -73,7 +73,7 @@ done
 
 # Ensure we have the command full path, daemon short name, and number of processes
 # before we proceed
-if [ -z $command_full_path ]; then
+if [ -z "$command_full_path" ]; then
   echo "The command's full path set; use -c or --command_full_path"
   exit 1
 fi
