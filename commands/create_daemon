@@ -94,6 +94,7 @@ cat << EOF | sudo tee /etc/supervisord.d/conf.d/$daemon_short_name.ini
 [program:$daemon_short_name]
 command=$command_full_path
 numprocs=$number_of_processes
+autorestart=true
 user=centos
 stdout_logfile=/var/log/supervisord/$daemon_short_name.stdout.log
 stderr_logfile=/var/log/supervisord/$daemon_short_name.stderr.log
