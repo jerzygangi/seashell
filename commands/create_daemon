@@ -104,3 +104,9 @@ EOF
 # Notify Supervisord that we have a new configuration file, and that it should
 # reload it
 supervisorctl update
+
+# N.B. To check the status of the job in Supervisord, run
+# supervisorctl status DAEMON_SHORT_NAME
+
+# N.B. Make sure the daemon is an executable script which starts with a #!/usr/bin/env bash
+# and includes all of the environment variables it needs, since the shell is non-interactive
