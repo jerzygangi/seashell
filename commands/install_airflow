@@ -32,14 +32,14 @@ source /home/centos/.bash_profile
 
 # Make a script that can start Airflow with all environmental variables
 # (Perfect for use in non-interactive shells without Virtualenv's activate)
-cat << EOF | sudo tee /opt/start_airflow
+cat << EOF | sudo tee /opt/airflow/start_airflow
 #!/usr/bin/env bash
 
 VIRTUAL_ENV="/opt/virtualenvs/airflow" PATH="\$VIRTUAL_ENV/bin:\$PATH" AIRFLOW_HOME=/opt/airflow /opt/virtualenvs/airflow/bin/airflow webserver -p 8080
 
 EOF
-sudo chown centos:centos /opt/start_airflow
-chmod +x /opt/start_airflow
+sudo chown centos:centos /opt/airflow/start_airflow
+chmod +x /opt/airflow/start_airflow
 
 # N.B., this is how you start the Airflow web server as a logged-in user
 # /opt/virtualenvs/airflow/bin/airflow webserver -p 8080
