@@ -32,6 +32,7 @@ supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
 [supervisord]
 logfile=/var/log/supervisord/supervisord_main.log
 pidfile=/tmp/supervisord.pid
+user=centos
 
 ; Point supervisorctl to the supervisord socket
 ; (Think of supervisord as a server, and supervisorctl as a client that needs to
