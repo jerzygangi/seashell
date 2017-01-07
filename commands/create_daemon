@@ -99,3 +99,7 @@ stdout_logfile=/var/log/supervisord/$daemon_short_name.stdout.log
 stderr_logfile=/var/log/supervisord/$daemon_short_name.stderr.log
 
 EOF
+
+# Notify Supervisord that we have a new configuration file, and that it should
+# reload it
+supervisorctl update
