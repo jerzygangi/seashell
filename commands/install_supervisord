@@ -64,7 +64,8 @@ sudo chown centos:centos /etc/supervisord.d/conf.d
 # Finally, start Supervisord
 supervisord
 
+# N.B. To create a daemon, run seashell/commands/create_daemon
+
 # N.B. Place configuration files in /etc/supervisord.d/conf.d/my_daemon.ini, where my_file
 # is the daemon you wish to create; for example, django.ini. This is how you create an
 # actual daemon to be managed by Supervisord.
-
