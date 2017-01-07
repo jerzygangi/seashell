@@ -1,0 +1,101 @@
+#!/usr/bin/env bash
+
+#
+# create_daemon
+#
+# Daemonize a process that will be managed by Supervisord, so that process stays alive
+# even if it crashes
+
+# Set the default arguments
+command_full_path=
+daemon_short_name=
+number_of_processes=1
+
+# Keep track of the original arguments passed to this script
+original_arguments=()
+for param in "$@"; do
+  original_arguments+=("$param")
+done
+
+# Explain how to use this script
+usage(){
+	cat <<- EOF
+
+	Usage: create_daemon [options]
+
+	Options:
+		-c, --command_full_path <absolute_path>   The absolute path to the executable we're daemonizing
+		-s, --daemon_short_name <shortname>       A shorthand name for the daemon; 1 word, no spaces
+		-n, --number_of_processes <number>        How many instances of this executable should Supervisord keep alive?
+		-h, --help                                This message
+
+	EOF
+}
+
+# If the user asks for help, print out the usage
+set -- "${original_arguments[@]}"
+while [ "$1" != "" ]; do
+  case $1 in
+    -h | --help )
+      usage
+      exit
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
+
+# Capture the command line arguements from the user
+set -- "${original_arguments[@]}"
+while [ "$1" != "" ]; do
+  case $1 in
+    -c | --command_full_path )
+      shift
+      command_full_path=$1
+      shift
+      ;;
+    -s | --daemon_short_name )
+      shift
+      daemon_short_name=$1
+      shift
+      ;;
+    -n | --number_of_processes )
+      shift
+      number_of_processes=$1
+      shift
+      ;;
+    *)
+      usage
+      exit 1
+  esac
+done
+
+# Ensure we have the command full path, daemon short name, and number of processes
+# before we proceed
+if [ -z $command_full_path ]; then
+  echo "The command's full path set; use -c or --command_full_path"
+  exit 1
+fi
+if [ -z $daemon_short_name ]; then
+  echo "The daemon's short name must be set; use -s or --daemon_short_name"
+  exit 1
+fi
+if [ -z $number_of_processes ]; then
+  echo "The number of processses to keep alive must be set; use -n or --number_of_processes"
+  exit 1
+fi
+
+# Create a daemon using Supervisord
+sudo rm /etc/supervisord.d/conf.d/$daemon_short_name.ini 2> /dev/null
+cat << EOF | sudo tee /etc/supervisord.d/conf.d/$daemon_short_name.ini
+# Daemon for $daemon_short_name
+
+[program:$daemon_short_name]
+command=$command_full_path
+numprocs=$number_of_processes
+user=centos
+stdout_logfile=/var/log/supervisord/$daemon_short_name.stdout.log
+stderr_logfile=/var/log/supervisord/$daemon_short_name.stderr.log
+
+EOF
