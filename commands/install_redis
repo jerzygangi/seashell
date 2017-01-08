@@ -1,0 +1,255 @@
+#!/usr/bin/env bash
+
+#
+# install_redis
+#
+# This script installs Redis, an in memory key-value store
+
+# Set the default arguments
+number_of_databases=1
+use_password="Y"
+password=
+memory_limit=
+
+# Keep track of the original arguments passed to this script
+original_arguments=()
+for param in "$@"; do
+  original_arguments+=("$param")
+done
+
+# Explain how to use this script
+usage(){
+	cat <<- EOF
+
+	Usage: install_redis [options]
+
+	Options:
+		-n, --number_of_databases <number>    How many databases Redis will be configured to run
+		-p, --use_password <Y_or_N>           Should we protect this database with a password?
+		-w, --password <password>             If Y for use_password, what is the password?
+		-m, --memory_limit                    Using the syntax below, the maximum amount of memory
+                                          Redis will be allowed to occupy
+		-h, --help                            This message
+
+	Memory syntax:
+		Follow the usual form of 1k, 5GB, 4M, etc. Specifically:
+		1k == 1000 bytes
+		1kb == 1024 bytes
+		1m == 1000000 bytes
+		1mb == 1024*1024 bytes
+		1g => 1000000000 bytes
+		1gb => 1024*1024*1024 bytes
+		N.B. Units are case insensitive, so 1GB, 1Gb, and 1gB are all the same
+
+	EOF
+}
+
+# If the user asks for help, print out the usage
+set -- "${original_arguments[@]}"
+while [ "$1" != "" ]; do
+  case $1 in
+    -h | --help )
+      usage
+      exit
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
+
+# Capture the command line arguements from the user
+set -- "${original_arguments[@]}"
+while [ "$1" != "" ]; do
+  case $1 in
+    -n | --number_of_databases )
+      shift
+      number_of_databases=$1
+      shift
+      ;;
+    -p | --use_password )
+      shift
+      use_password=$1
+      shift
+      ;;
+    -w | --password )
+      shift
+      password=$1
+      shift
+      ;;
+    -m | --memory_limit )
+      shift
+      memory_limit=$1
+      shift
+      ;;
+    *)
+      usage
+      exit 1
+  esac
+done
+
+# Ensure we have the number of databases, password boolean, password (if necessary),
+# and memory limit before we proceed
+if [ -z $number_of_databases ]; then
+  echo "The number of databases must be set; use -n or --number_of_databases"
+  exit 1
+fi
+if [ -z $use_password ] || ( [ "$use_password" != "Y" ] && [ "$use_password" != "N" ] ); then
+  echo "The password boolean must be set to Y or N; use -p or --use_password"
+  exit 1
+fi
+if [ "$use_password" == "Y" ] && [ -z $password ]; then
+  echo "The password must be set; use -w or --password"
+  exit 1
+fi
+if [ -z $memory_limit ]; then
+  echo "The memory limit must be set; use -m or --memory_limit"
+  exit 1
+fi
+
+# We're going to download and compile in a new /tmp/install_redis directory
+mkdir /tmp/install_redis
+cd /tmp/install_redis
+
+# Download the Redis source
+curl -O http://download.redis.io/redis-stable.tar.gz
+
+# "Unzip" the Redis source
+tar xvzf redis-stable.tar.gz
+
+# Configure, build, and install Redis
+cd redis-stable
+make
+sudo make install
+
+# Build the master Redis configuration
+sudo mkdir /etc/redis/
+sudo chown centos:centos /etc/redis
+cat << EOF | sudo tee /etc/redis/redis.conf
+# Redis configuration
+
+# We want to allow connections from outside IP's -- even if no password is
+# configured
+protected-mode no
+
+# Listen on port 6379
+port 6379
+
+# TCP listen() backlog set high to prevent slow clients from clogging up the pipes
+tcp-backlog 64511
+
+# Do not close connections on idle clients
+# (A lot of services intentionally keep connections open for long periods of time)
+timeout 0
+
+# Send ACK's every 300 seconds over TCP to keep connections alive and detect
+# dead peers
+tcp-keepalive 300
+
+# Set logging level to be pretty quiet; if you're having problems, change this and
+# restart Redis
+# (Options: debug, verbose, notice, or warning)
+loglevel notice
+
+# Don't daemonize Redis when it starts; don't put it into a daemonized signaling
+# mode, either: we'll rely on Supervisord to do that
+daemonize no
+supervised no
+
+# Force logging to stdout
+logfile ""
+
+# Create as many databases as specified
+databases $number_of_databases
+
+`if [ "$use_password" == "Y" ]; then
+echo "# Require a password to issue commands"
+requirepass $password
+fi
+`
+
+# Don't dump the database to disk asyncronously
+appendonly no
+
+# Disable latency monitoring
+latency-monitor-threshold 0
+
+# Limit Redis to a specific memory footprint
+maxmemory $memory_limit
+
+# Return an error if Redis runs out of memory
+maxmemory-policy noeviction
+
+EOF
+sudo chown centos:centos /etc/redis/redis.conf
+
+# Allow Redis to open more than 4,000-ish file descriptors (the OS default)
+cat << EOF | sudo tee /etc/security/limits.d/redis.conf
+# Allow Redis to open more than 4,000-ish file descriptors (the OS default)
+
+*    soft    nofile 11000
+*    hard    nofile 11000
+
+EOF
+echo "You will need to log out and log back in before you can start Redis
+so that the file descriptor limits in /etc/security/limits.d/redis.conf
+take effect."
+
+# Allow Redis enforce the TCP backlog setting of 64511 set in
+# /etc/redis/redis.conf
+cat << EOF | sudo tee /etc/sysctl.d/redis_tcp_backlog.conf
+# Allow Redis enforce the TCP backlog setting of 64511 set in
+# /etc/redis/redis.conf
+
+net.core.somaxconn=65535
+
+EOF
+sudo chmod 0777 /etc/sysctl.d/redis_tcp_backlog.conf
+# Reload sysctl.d configuration files
+sudo sysctl --system
+
+# Quiet a warning from Redis about overcommit_memory, even though this
+# installation does not save the Redis database to disk in the background
+cat << EOF | sudo tee /etc/sysctl.d/redis_overcommit_memory.conf
+# Quiet a warning from Redis about overcommit_memory, even though this
+# installation does not save the Redis database to disk in the background
+
+vm.overcommit_memory=1
+
+EOF
+sudo chmod 0777 /etc/sysctl.d/redis_overcommit_memory.conf
+# Reload sysctl.d configuration files
+sudo sysctl --system
+
+# Turn off THP (Transparent Huge Pages), which can cause latency in Redis
+cat << EOF | sudo tee /etc/redis/turn_off_transparent_hugepage
+#!/usr/bin/env bash
+
+# Turn off THP (Transparent Huge Pages), which can cause latency in Redis
+
+echo never | sudo tee /sys/kernel/mm/transparent_hugepage/enabled
+
+EOF
+sudo chown centos:centos /etc/redis/turn_off_transparent_hugepage
+sudo chmod 0744 /etc/redis/turn_off_transparent_hugepage
+cat << EOF | sudo tee /etc/systemd/system/turn_off_transparent_hugepage.service
+# Turn off THP (Transparent Huge Pages), which can cause latency in Redis
+
+[Unit]
+Description=Turn off Transparent Huge Pages for Redis
+
+[Service]
+ExecStart=/etc/redis/turn_off_transparent_hugepage
+
+[Install]
+WantedBy=multi-user.target
+
+EOF
+sudo chmod 0644 /etc/systemd/system/turn_off_transparent_hugepage.service
+sudo systemctl enable /etc/systemd/system/turn_off_transparent_hugepage.service
+sudo systemctl start turn_off_transparent_hugepage.service
+
+# Clean up the /tmp/install_redis folder since we're done with it
+rm -rf /tmp/install_redis
+
+# N.B. Start redis with redis-server /etc/redis/redis.conf
