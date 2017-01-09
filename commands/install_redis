@@ -7,7 +7,7 @@
 
 # Set the default arguments
 number_of_databases=1
-use_password="Y"
+use_password=Y
 password=
 memory_limit=
 
@@ -164,7 +164,7 @@ databases $number_of_databases
 
 `if [ "$use_password" == "Y" ]; then
 echo "# Require a password to issue commands"
-requirepass $password
+echo "requirepass $password"
 fi
 `
 
