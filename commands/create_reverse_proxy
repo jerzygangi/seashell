@@ -147,4 +147,3 @@ EOF
 
 # Reload Nginx so that the new configuration takes effect
 sudo systemctl reload nginx
-
