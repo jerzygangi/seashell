@@ -19,6 +19,63 @@ mkdir /opt/airflow
 echo export AIRFLOW_HOME=/opt/airflow >> /home/centos/.bash_profile
 source /home/centos/.bash_profile
 
+# Preempt the boilerplate Airflow configuraiton file with our own
+cat << EOF | sudo tee /opt/airflow/airflow.cfg
+[core]
+airflow_home = /opt/airflow
+dags_folder = /opt/airflow/dags
+base_log_folder = /opt/airflow/logs
+executor = SequentialExecutor
+sql_alchemy_conn = sqlite:////opt/airflow/airflow.db
+parallelism = 32
+dag_concurrency = 16
+load_examples = False
+plugins_folder = /opt/airflow/plugins
+fernet_key = `cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
+unit_test_mode = False
+
+[cli]
+api_client = airflow.api.client.local_client
+endpoint_url = http://localhost:8080
+
+[api]
+auth_backend = airflow.api.auth.backend.default
+
+[operators]
+default_owner = Airflow
+default_cpus = 1
+default_ram = 512
+default_disk = 512
+default_gpus = 0
+
+[webserver]
+base_url = http://localhost:8080
+web_server_host = 0.0.0.0
+web_server_port = 8080
+worker_refresh_batch_size = 1
+worker_refresh_interval = 30
+secret_key = `cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
+workers = 4
+worker_class = sync
+
+[scheduler]
+job_heartbeat_sec = 5
+scheduler_heartbeat_sec = 5
+run_duration = -1
+min_file_process_interval = 0
+dag_dir_list_interval = 300
+print_stats_interval = 30
+child_process_log_directory = /opt/airflow/logs/scheduler
+scheduler_zombie_task_threshold = 300
+catchup_by_default = True
+max_threads = 2
+authenticate = False
+
+[github_enterprise]
+api_rev = v3
+EOF
+sudo chown centos:centos /opt/airflow/airflow.cfg
+
 # Install Airflow, with all Airflow packages
 cd /opt/airflow
 /opt/virtualenvs/airflow/bin/pip install airflow[all]
