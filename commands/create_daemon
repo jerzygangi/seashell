@@ -111,5 +111,11 @@ supervisorctl update
 # N.B. To check the status of the job in Supervisord, run
 # supervisorctl status DAEMON_SHORT_NAME
 
+# N.B. To stop a Supervisord job, run
+# supervisorctl stop DAEMON_SHORT_NAME
+
+# N.B. To start a Supervisord job, run
+# supervisorctl start DAEMON_SHORT_NAME
+
 # N.B. Make sure the daemon is an executable script which starts with a #!/usr/bin/env bash
 # and includes all of the environment variables it needs, since the shell is non-interactive
