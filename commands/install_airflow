@@ -5,6 +5,63 @@
 #
 # Install Airflow, with all Airflow packages
 
+# Set the default arguments
+dags_folder="/opt/airflow/dags"
+
+# Keep track of the original arguments passed to this script
+original_arguments=()
+for param in "$@"; do
+  original_arguments+=("$param")
+done
+
+# Explain how to use this script
+usage(){
+	cat <<- EOF
+
+	Usage: install_airflow [options]
+
+	Options:
+		-d, --dags_folder <path>                The path where Airflow will look for DAGs; e.g., /dags
+		-h, --help                              This message
+
+	EOF
+}
+
+# If the user asks for help, print out the usage
+set -- "${original_arguments[@]}"
+while [ "$1" != "" ]; do
+  case $1 in
+    -h | --help )
+      usage
+      exit
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
+
+# Capture the command line arguements from the user
+set -- "${original_arguments[@]}"
+while [ "$1" != "" ]; do
+  case $1 in
+    -d | --dags_folder )
+      shift
+      dags_folder=$1
+      shift
+      ;;
+    *)
+      usage
+      exit 1
+  esac
+done
+
+# Ensure we have the dags folder before we proceed
+if [ -z $dags_folder ]; then
+  echo "The DAGs folder must be set; use -d or --dags_folder"
+  exit 1
+fi
+
 # Set up a virtualenv for Airflow
 cd /opt/virtualenvs
 virtualenv airflow
@@ -23,7 +80,7 @@ source /home/centos/.bash_profile
 cat << EOF | sudo tee /opt/airflow/airflow.cfg
 [core]
 airflow_home = /opt/airflow
-dags_folder = /opt/airflow/dags
+dags_folder = $dags_folder
 base_log_folder = /opt/airflow/logs
 executor = SequentialExecutor
 sql_alchemy_conn = sqlite:////opt/airflow/airflow.db
