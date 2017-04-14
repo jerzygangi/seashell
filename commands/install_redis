@@ -252,4 +252,16 @@ sudo systemctl start turn_off_transparent_hugepage.service
 # Clean up the /tmp/install_redis folder since we're done with it
 rm -rf /tmp/install_redis
 
-# N.B. Start redis with redis-server /etc/redis/redis.conf
+# Make a script that can start Redis with all environmental variables
+# (Perfect for use in non-interactive shells without Virtualenv's activate)
+sudo mkdir /opt/redis
+cat << EOF | sudo tee /opt/redis/start_redis
+#!/usr/bin/env bash
+
+/usr/local/bin/redis-server /etc/redis/redis.conf
+
+EOF
+sudo chown centos:centos /opt/redis/start_redis
+chmod +x /opt/redis/start_redis
+
+# N.B. Start redis with redis-server /etc/redis/redis.conf or /opt/redis/start_redis
