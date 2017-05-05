@@ -63,7 +63,7 @@ curl https://bootstrap.pypa.io/get-pip.py | sudo /usr/local/bin/python2.7
 sudo /usr/local/bin/pip install virtualenv
 
 # Create a directory for virtualenv's to live in
-mkdir /opt/virtualenvs
+sudo mkdir /opt/virtualenvs
 
 # Clean up the /tmp/install_python_2 folder since we're done with it
 rm -rf /tmp/install_python_2
