@@ -87,7 +87,7 @@ if [ "$use_celery" == true ] && ([ -z $postgres_url ] || [ -z $redis_url ]); the
   exit 1
 fi
 # You can't use Redis unless Celery is on
-if [ -n $redis_url ] && [ "$use_celery" == false ]; then
+if [ -n "$redis_url" ] && [ "$use_celery" == false ]; then
   echo "Airflow cannot use Redis if Celery is disabled; turn on Celery with -c or --celery or stop setting Redis with -r or --redis_url"
   exit 1 
 fi
