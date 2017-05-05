@@ -102,7 +102,7 @@ sudo rpm -i http://195.220.108.108/linux/centos/7.3.1611/os/x86_64/Packages/libf
 sudo yum -y install libffi-devel
 
 # Make Airflow's home directory
-mkdir /opt/airflow
+sudo mkdir /opt/airflow
 echo export AIRFLOW_HOME=/opt/airflow >> /home/centos/.bash_profile
 source /home/centos/.bash_profile
 
