@@ -210,6 +210,9 @@ sudo chown centos:centos /opt/airflow/airflow.cfg
 cd /opt/airflow
 /opt/virtualenvs/airflow/bin/pip install airflow[all]
 
+# Install Celery, so that we can distribute Airflow work
+/opt/virtualenvs/airflow/bin/pip install celery[redis]
+
 # Install Flower, so Celery can be monitored
 /opt/virtualenvs/airflow/bin/pip install flower
 
