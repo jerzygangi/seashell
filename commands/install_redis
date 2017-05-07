@@ -250,6 +250,7 @@ sudo systemctl enable /etc/systemd/system/turn_off_transparent_hugepage.service
 sudo systemctl start turn_off_transparent_hugepage.service
 
 # Clean up the /tmp/install_redis folder since we're done with it
+cd ~
 rm -rf /tmp/install_redis
 
 # Make a script that can start Redis with all environmental variables
