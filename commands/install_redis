@@ -255,6 +255,7 @@ rm -rf /tmp/install_redis
 # Make a script that can start Redis with all environmental variables
 # (Perfect for use in non-interactive shells without Virtualenv's activate)
 sudo mkdir /opt/redis
+sudo chown centos:centos /opt/redis
 cat << EOF | sudo tee /opt/redis/start_redis
 #!/usr/bin/env bash
 
