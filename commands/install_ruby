@@ -11,3 +11,6 @@ curl -sSL https://get.rvm.io | bash -s stable --ruby
 
 # Update the env for the current session
 source /home/vagrant/.rvm/scripts/rvm
+
+# Install Bundler
+gem install bundle
