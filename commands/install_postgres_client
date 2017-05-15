@@ -9,7 +9,7 @@
 # what you want
 
 # Install the Postgres 9.5 client
-sudo yum -y install http://yum.postgresql.org/9.5/redhat/rhel-7-x86_64/pgdg-redhat95-9.5-2.noarch.rpm
+sudo yum -y install https://download.postgresql.org/pub/repos/yum/9.5/redhat/rhel-7-x86_64/pgdg-centos95-9.5-3.noarch.rpm
 sudo yum -y install postgresql95-devel
 
 # Add the PostgreSQL 9.5 client binaries to the $PATH 
