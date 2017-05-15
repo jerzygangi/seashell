@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+#
+# point_bundler_to_postgres
+#
+# In order for Bundler to install the 'pg' gem, bundler needs to know
+# the location of pg_config
+#
+
+bundle config build.pg --with-pg-config=/usr/pgsql-9.5/bin/pg_config
