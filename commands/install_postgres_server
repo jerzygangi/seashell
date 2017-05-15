@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+#
+# install_postgres_server
+#
+# Install PostgreSQL server
+
+# Exclude the default yum repository version of PostgreSQL when running `yum install`
+sudo sed -i -e '/\[base\]/a exclude=postgresql*' -e '/\[updates\]/a exclude=postgresql*' /etc/yum.repos.d/CentOS-Base.repo
+
+# Download PostgreSQL and install it with yum
+sudo yum -y install https://download.postgresql.org/pub/repos/yum/9.5/redhat/rhel-7-x86_64/pgdg-centos95-9.5-3.noarch.rpm
+sudo yum -y install postgresql95-server.x86_64
+
+# Initialize the PostgreSQL database into PGDATA
+sudo /usr/pgsql-9.5/bin/postgresql95-setup initdb
+
+# Start PostgreSQL automatically when the system starts
+sudo systemctl enable postgresql-9.5.service
+
+# And, finally, start PostgreSQL right now
+sudo systemctl start postgresql-9.5.service
+
+# N.B. If you need to access PostgreSQL, use Seashell's install_postgres_client
