@@ -10,7 +10,7 @@ curl -sSL https://rvm.io/mpapis.asc | gpg --import -
 curl -sSL https://get.rvm.io | bash -s stable --ruby
 
 # Update the env for the current session
-source /home/vagrant/.rvm/scripts/rvm
+source /home/`whoami`/.rvm/scripts/rvm
 
 # Install Bundler
 gem install bundle
