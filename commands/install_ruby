@@ -14,3 +14,6 @@ source /home/`whoami`/.rvm/scripts/rvm
 
 # Install Bundler
 gem install bundle
+
+# Update the env for the current session
+source /home/`whoami`/.bash_profile
