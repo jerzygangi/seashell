@@ -7,4 +7,8 @@
 # the location of pg_config
 #
 
+# Update the env for the current session
+source /home/`whoami`/.bash_profile
+
+# Configure Bundler for PostgreSQL
 bundle config build.pg --with-pg-config=/usr/pgsql-9.5/bin/pg_config
