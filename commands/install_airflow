@@ -10,6 +10,7 @@ dags_folder="/opt/airflow/dags"
 postgres_url=
 use_celery=false
 redis_url=
+login_module=
 
 # Keep track of the original arguments passed to this script
 original_arguments=()
@@ -21,14 +22,15 @@ done
 usage(){
 	cat <<- EOF
 
-	Usage: install_airflow [options]
+  Usage: install_airflow [options]
 
-	Options:
-		-f, --dags_folder <path>                The path where Airflow will look for DAGs; e.g., /dags
+  Options:
+    -f, --dags_folder <path>                The path where Airflow will look for DAGs; e.g., /dags
     -p, --postgres_url <url>                Use PostgreSQL, with this connection string; e.g., user:pass@host/db
     -c, --celery                            Use Celery to distribute Airflow execution
     -r, --redis_url <url>                   The Redis connection string; e.g., pass@host:port/db_number
-		-h, --help                              This message
+    -l, --login_module <name>               The name of your custom login module in /opt/airflow, e.g. acme_ldap
+    -h, --help                              This message
 
 	EOF
 }
@@ -68,6 +70,11 @@ while [ "$1" != "" ]; do
     -r | --redis_url )
       shift
       redis_url=$1
+      shift
+      ;;
+    -l | --login_module )
+      shift
+      login_module=$1
       shift
       ;;
     *)
@@ -168,6 +175,16 @@ worker_refresh_interval = 30
 secret_key = `cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1`
 workers = 4
 worker_class = sync
+EOF
+
+if [ -n "$login_module" ]; then
+	cat <<-EOF | sudo tee -a /opt/airflow/airflow.cfg
+		authenticate = True
+		auth_backend = `echo $login_module`
+	EOF
+fi
+
+cat << EOF | sudo tee -a /opt/airflow/airflow.cfg
 
 [scheduler]
 job_heartbeat_sec = 5
@@ -230,7 +247,7 @@ source /home/centos/.bash_profile
 cat << EOF | sudo tee /opt/airflow/start_airflow_webserver
 #!/usr/bin/env bash
 
-VIRTUAL_ENV="/opt/virtualenvs/airflow" PATH="\$VIRTUAL_ENV/bin:\$PATH" AIRFLOW_HOME=/opt/airflow /opt/virtualenvs/airflow/bin/airflow webserver -p 8080
+PYTHONPATH="/opt/airflow" VIRTUAL_ENV="/opt/virtualenvs/airflow" PATH="\$VIRTUAL_ENV/bin:\$PATH" AIRFLOW_HOME=/opt/airflow /opt/virtualenvs/airflow/bin/airflow webserver -p 8080
 
 EOF
 sudo chown centos:centos /opt/airflow/start_airflow_webserver
@@ -239,7 +256,7 @@ chmod +x /opt/airflow/start_airflow_webserver
 cat << EOF | sudo tee /opt/airflow/start_airflow_scheduler
 #!/usr/bin/env bash
 
-VIRTUAL_ENV="/opt/virtualenvs/airflow" PATH="\$VIRTUAL_ENV/bin:\$PATH" AIRFLOW_HOME=/opt/airflow /opt/virtualenvs/airflow/bin/airflow scheduler --num_runs 20
+PYTHONPATH="/opt/airflow" VIRTUAL_ENV="/opt/virtualenvs/airflow" PATH="\$VIRTUAL_ENV/bin:\$PATH" AIRFLOW_HOME=/opt/airflow /opt/virtualenvs/airflow/bin/airflow scheduler --num_runs 20
 
 EOF
 sudo chown centos:centos /opt/airflow/start_airflow_scheduler
@@ -248,7 +265,7 @@ chmod +x /opt/airflow/start_airflow_scheduler
 cat << EOF | sudo tee /opt/airflow/start_airflow_worker
 #!/usr/bin/env bash
 
-VIRTUAL_ENV="/opt/virtualenvs/airflow" PATH="\$VIRTUAL_ENV/bin:\$PATH" AIRFLOW_HOME=/opt/airflow /opt/virtualenvs/airflow/bin/airflow worker -p 8080
+PYTHONPATH="/opt/airflow" VIRTUAL_ENV="/opt/virtualenvs/airflow" PATH="\$VIRTUAL_ENV/bin:\$PATH" AIRFLOW_HOME=/opt/airflow /opt/virtualenvs/airflow/bin/airflow worker -p 8080
 
 EOF
 sudo chown centos:centos /opt/airflow/start_airflow_worker
@@ -257,7 +274,7 @@ chmod +x /opt/airflow/start_airflow_worker
 cat << EOF | sudo tee /opt/airflow/start_airflow_flower_webserver
 #!/usr/bin/env bash
 
-VIRTUAL_ENV="/opt/virtualenvs/airflow" PATH="\$VIRTUAL_ENV/bin:\$PATH" AIRFLOW_HOME=/opt/airflow /opt/virtualenvs/airflow/bin/airflow flower
+PYTHONPATH="/opt/airflow" VIRTUAL_ENV="/opt/virtualenvs/airflow" PATH="\$VIRTUAL_ENV/bin:\$PATH" AIRFLOW_HOME=/opt/airflow /opt/virtualenvs/airflow/bin/airflow flower
 
 EOF
 sudo chown centos:centos /opt/airflow/start_airflow_flower_webserver
