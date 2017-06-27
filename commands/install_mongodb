@@ -1,0 +1,114 @@
+#!/usr/bin/env bash
+
+#
+# install_mongodb
+#
+# Create a single-node MongoDB server
+
+
+# Set the default arguments
+mongodb_host="127.0.0.1"
+mongodb_port="27017"
+
+# Keep track of the original arguments passed to this script
+original_arguments=()
+for param in "$@"; do
+  original_arguments+=("$param")
+done
+
+# Explain how to use this script
+usage(){
+	cat <<- EOF
+
+  Usage: install_mongodb [options]
+
+  Options:
+    -h, --hostname <ip_address>             The IP address that MongoDB will bind to, and accept incoming connections on
+    -p, --port <number>                     The port that MongoDB will bind to, and accept incoming connections on
+    -h, --help                              This message
+
+	EOF
+}
+
+# If the user asks for help, print out the usage
+set -- "${original_arguments[@]}"
+while [ "$1" != "" ]; do
+  case $1 in
+    -h | --help )
+      usage
+      exit
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
+
+# Capture the command line arguements from the user
+set -- "${original_arguments[@]}"
+while [ "$1" != "" ]; do
+  case $1 in
+    -h | --hostname )
+      shift
+      mongodb_host=$1
+      shift
+      ;;
+    -p | --port )
+      shift
+      mongodb_port=$1
+      shift
+      ;;
+    *)
+      usage
+      exit 1
+  esac
+done
+
+# Add the MongoDB repos to yum
+cat << EOF | sudo tee -a /etc/yum.repos.d/mongodb-org-3.4.repo
+[mongodb-org-3.4]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/3.4/x86_64/
+gpgcheck=1
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
+EOF
+
+# Create a simple, generic configuration for single-node MongoDB
+cat << EOF | sudo tee -a /etc/mongod.conf
+# MongoDB configuration for single-node database
+
+systemLog:
+  destination: file
+  logAppend: true
+  path: /var/log/mongodb/mongod.log
+
+storage:
+  dbPath: /var/mongodb_database
+  journal:
+    enabled: true
+
+processManagement:
+  fork: true
+  pidFilePath: /var/run/mongod.pid
+
+# network interfaces
+net:
+  bindIp: `echo $mongodb_host`
+  port: `echo $mongodb_port`
+EOF
+sudo chown centos:centos /etc/mongod.conf
+sudo chmod 0700 /etc/mongod.conf
+# Create the MongoDB data folder
+sudo mkdir /var/mongodb_database
+sudo chown centos:centos /var/mongodb_database
+sudo chmod 0700 /var/mongodb_database
+# Create the MongoDB log folder
+sudo mkdir -p /var/log/mongodb
+sudo chown centos:centos /var/log/mongodb
+sudo chmod 0700 /var/log/mongodb
+# Create the MongoDB pid folder
+sudo mkdir -p /var/run/
+
+# Install MongoDB
+sudo yum install -y mongodb-org
