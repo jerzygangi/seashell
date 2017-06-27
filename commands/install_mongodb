@@ -48,7 +48,7 @@ done
 set -- "${original_arguments[@]}"
 while [ "$1" != "" ]; do
   case $1 in
-    -h | --hostname )
+    -i | --hostname )
       shift
       mongodb_host=$1
       shift
