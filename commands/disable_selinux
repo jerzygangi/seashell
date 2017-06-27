@@ -5,7 +5,6 @@
 #
 # SELinux is a nightmare, and Seashell always turns it off
 
-sudo rm /etc/sysconfig/selinux
 cat << EOF | sudo tee /etc/sysconfig/selinux
 SELINUX=disabled
 SELINUXTYPE=targeted
