@@ -109,6 +109,8 @@ sudo chown mongod:mongod /var/log/mongodb
 sudo chmod 0700 /var/log/mongodb
 # Create the MongoDB pid folder
 sudo mkdir -p /var/run/mongodb
+sudo chown mongod:mongod /var/run/mongodb
+sudo chmod 0700 /var/run/mongodb
 
 # Install MongoDB
 sudo yum install -y mongodb-org
