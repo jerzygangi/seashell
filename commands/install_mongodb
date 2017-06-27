@@ -90,25 +90,33 @@ storage:
 
 processManagement:
   fork: true
-  pidFilePath: /var/run/mongod.pid
+  pidFilePath: /var/run/mongodb/mongod.pid
 
 # network interfaces
 net:
   bindIp: `echo $mongodb_host`
   port: `echo $mongodb_port`
 EOF
-sudo chown centos:centos /etc/mongod.conf
+sudo chown mongod:mongod /etc/mongod.conf
 sudo chmod 0700 /etc/mongod.conf
 # Create the MongoDB data folder
 sudo mkdir /var/mongodb_database
-sudo chown centos:centos /var/mongodb_database
+sudo chown mongod:mongod /var/mongodb_database
 sudo chmod 0700 /var/mongodb_database
 # Create the MongoDB log folder
 sudo mkdir -p /var/log/mongodb
-sudo chown centos:centos /var/log/mongodb
+sudo chown mongod:mongod /var/log/mongodb
 sudo chmod 0700 /var/log/mongodb
 # Create the MongoDB pid folder
-sudo mkdir -p /var/run/
+sudo mkdir -p /var/run/mongodb
 
 # Install MongoDB
 sudo yum install -y mongodb-org
+
+# Tell SELinux to allow MongoDB to connect on the requested port
+sudo semanage port -a -t mongod_port_t -p tcp `echo $mongodb_port`
+
+# Start MongoDB now
+sudo service mongod start
+
+# N.B. MongoDB will run as the user mongod
