@@ -23,7 +23,7 @@ usage(){
   Usage: install_mongodb [options]
 
   Options:
-    -h, --hostname <ip_address>             The IP address that MongoDB will bind to, and accept incoming connections on
+    -i, --ip_hostname <ip_address>          The IP address that MongoDB will bind to, and accept incoming connections on
     -p, --port <number>                     The port that MongoDB will bind to, and accept incoming connections on
     -h, --help                              This message
 
