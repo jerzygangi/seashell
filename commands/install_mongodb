@@ -115,9 +115,6 @@ sudo chmod 0700 /var/run/mongodb
 # Install MongoDB
 sudo yum install -y mongodb-org
 
-# Tell SELinux to allow MongoDB to connect on the requested port
-sudo semanage port -a -t mongod_port_t -p tcp `echo $mongodb_port`
-
 # Start MongoDB now
 sudo service mongod start
 
