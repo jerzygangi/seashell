@@ -74,8 +74,12 @@ enabled=1
 gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
 EOF
 
+# Install MongoDB
+sudo yum install -y mongodb-org
+
 # Create a simple, generic configuration for single-node MongoDB
-cat << EOF | sudo tee -a /etc/mongod.conf
+rm -f /etc/mongod.conf
+cat << EOF | sudo tee /etc/mongod.conf
 # MongoDB configuration for single-node database
 
 systemLog:
@@ -111,9 +115,6 @@ sudo chmod 0700 /var/log/mongodb
 sudo mkdir -p /var/run/mongodb
 sudo chown mongod:mongod /var/run/mongodb
 sudo chmod 0700 /var/run/mongodb
-
-# Install MongoDB
-sudo yum install -y mongodb-org
 
 # Start MongoDB now
 sudo service mongod start
