@@ -3,7 +3,7 @@
 #
 # install_mongodb
 #
-# Create a single-node MongoDB server
+# Create a secured, single-node MongoDB server
 
 
 # Set the default arguments
