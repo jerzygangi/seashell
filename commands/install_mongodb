@@ -139,7 +139,7 @@ sudo chmod 0700 /var/run/mongodb
 sudo service mongod start
 until (echo exit | nc -v localhost $mongodb_port 2>&1 | grep "Ncat: Connected to"); do echo "Waiting for MongoDB to start"; sleep .5; done;
 
-# Secure MongoDB with the username and password
+# Secure MongoDB with a root username and password
 cd ~
 cat << EOF | sudo tee /home/centos/user_and_pass.js
 use admin
@@ -147,7 +147,7 @@ db.createUser(
   {
     user: "`echo $mongodb_username`",
     pwd: "`echo $mongodb_password`",
-    roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
+    roles: [ { role: "root", db: "admin" } ]
   }
 )
 EOF
