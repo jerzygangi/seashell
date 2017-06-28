@@ -147,7 +147,7 @@ db.createUser(
   {
     user: "`echo $mongodb_username`",
     pwd: "`echo $mongodb_password`",
-    roles: [ { role: "root", db: "admin" } ]
+    roles: [ "root" ]
   }
 )
 EOF
