@@ -95,7 +95,7 @@ EOF
 sudo yum install -y mongodb-org
 
 # Create a simple, generic configuration for single-node MongoDB
-rm -f /etc/mongod.conf
+sudo rm -f /etc/mongod.conf
 cat << EOF | sudo tee /etc/mongod.conf
 # MongoDB configuration for single-node database
 
