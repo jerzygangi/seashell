@@ -114,7 +114,7 @@ processManagement:
   pidFilePath: /var/run/mongodb/mongod.pid
 
 net:
-  bindIp: `echo $mongodb_host`
+  bindIp: 0.0.0.0
   port: `echo $mongodb_port`
 EOF
 sudo chown mongod:mongod /etc/mongod.conf
