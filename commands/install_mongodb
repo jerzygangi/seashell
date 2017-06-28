@@ -8,6 +8,8 @@
 
 # Set the default arguments
 mongodb_port="27017"
+mongodb_username=
+mongodb_password=
 
 # Keep track of the original arguments passed to this script
 original_arguments=()
@@ -22,7 +24,9 @@ usage(){
   Usage: install_mongodb [options]
 
   Options:
-    -p, --port <number>                     The port that MongoDB will bind to, and accept incoming connections on
+    -o, --port <number>                     The port that MongoDB will bind to, and accept incoming connections on
+    -u, --username <string>                 The username of the administrative user for MongoDB
+    -p, --password <string>                 The username of the administrative user for MongoDB
     -h, --help                              This message
 
 	EOF
@@ -51,9 +55,14 @@ while [ "$1" != "" ]; do
       mongodb_port=$1
       shift
       ;;
-    -p | --port )
+    -u | --username )
       shift
-      mongodb_port=$1
+      mongodb_username=$1
+      shift
+      ;;
+    -p | --password )
+      shift
+      mongodb_password=$1
       shift
       ;;
     *)
@@ -61,6 +70,16 @@ while [ "$1" != "" ]; do
       exit 1
   esac
 done
+
+# Ensure we have the username and password before we proceed
+if [ -z $mongodb_username ]; then
+  echo "The MongoDB username must be set; use -u or --username"
+  exit 1
+fi
+if [ -z $mongodb_password ]; then
+  echo "The MongoDB password must be set; use -u or --username"
+  exit 1
+fi
 
 # Add the MongoDB repos to yum
 cat << EOF | sudo tee -a /etc/yum.repos.d/mongodb-org-3.4.repo
@@ -116,5 +135,26 @@ sudo chmod 0700 /var/run/mongodb
 
 # Start MongoDB now
 sudo service mongod start
+
+# Secure MongoDB with the username and password
+cd ~
+cat << EOF | sudo tee /home/centos/user_and_pass.js
+use admin
+db.createUser(
+  {
+    user: "`echo $mongodb_username`",
+    pwd: "`echo $mongodb_username`",
+    roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
+  }
+)
+EOF
+/usr/bin/mongo localhost:$mongodb_port < /home/centos/user_and_pass.js
+rm -f /home/centos/user_and_pass.js
+cat << EOF | sudo tee -a /etc/mongod.conf
+
+security:
+  authorization: enabled
+EOF
+sudo service mongod restart
 
 # N.B. MongoDB will run as the user mongod
