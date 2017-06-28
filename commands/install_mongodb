@@ -132,8 +132,13 @@ sudo mkdir -p /var/run/mongodb
 sudo chown mongod:mongod /var/run/mongodb
 sudo chmod 0700 /var/run/mongodb
 
-# Start MongoDB now
+# Start MongoDB, and block until it comes online
 sudo service mongod start
+until (sudo service mongod status 2>/dev/null | grep "Active: active (running)")
+do
+  echo "Waiting for MongoDB to start"
+  sleep 1
+done
 
 # Secure MongoDB with the username and password
 cd ~
