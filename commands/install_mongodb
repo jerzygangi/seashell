@@ -94,6 +94,9 @@ EOF
 # Install MongoDB
 sudo yum install -y mongodb-org
 
+# Install Netcat, so we can tell when MongoDB comes online
+sudo yum -y install nmap-ncat
+
 # Create a simple, generic configuration for single-node MongoDB
 sudo rm -f /etc/mongod.conf
 cat << EOF | sudo tee /etc/mongod.conf
@@ -134,11 +137,7 @@ sudo chmod 0700 /var/run/mongodb
 
 # Start MongoDB, and block until it comes online
 sudo service mongod start
-until (sudo service mongod status 2>/dev/null | grep "Active: active (running)")
-do
-  echo "Waiting for MongoDB to start"
-  sleep 1
-done
+until (echo exit | nc -v localhost $mongodb_port 2>&1 | grep "Ncat: Connected to"); do echo "Waiting for MongoDB to start"; sleep .5; done;
 
 # Secure MongoDB with the username and password
 cd ~
