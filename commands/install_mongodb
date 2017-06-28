@@ -160,4 +160,7 @@ security:
 EOF
 sudo service mongod restart
 
+# Start MongoDB when the system starts
+sudo chkconfig mongod on
+
 # N.B. MongoDB will run as the user mongod
