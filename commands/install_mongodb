@@ -142,7 +142,7 @@ use admin
 db.createUser(
   {
     user: "`echo $mongodb_username`",
-    pwd: "`echo $mongodb_username`",
+    pwd: "`echo $mongodb_password`",
     roles: [ { role: "userAdminAnyDatabase", db: "admin" } ]
   }
 )
