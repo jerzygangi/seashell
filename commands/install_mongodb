@@ -113,7 +113,6 @@ processManagement:
   fork: true
   pidFilePath: /var/run/mongodb/mongod.pid
 
-# network interfaces
 net:
   bindIp: `echo $mongodb_host`
   port: `echo $mongodb_port`
