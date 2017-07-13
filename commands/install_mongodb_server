@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 #
-# install_mongodb
+# install_mongodb_server
 #
 # Create a secured, single-node MongoDB server
 
@@ -21,7 +21,7 @@ done
 usage(){
 	cat <<- EOF
 
-  Usage: install_mongodb [options]
+  Usage: install_mongodb_server [options]
 
   Options:
     -o, --port <number>                     The port that MongoDB will bind to, and accept incoming connections on
@@ -77,19 +77,23 @@ if [ -z $mongodb_username ]; then
   exit 1
 fi
 if [ -z $mongodb_password ]; then
-  echo "The MongoDB password must be set; use -u or --username"
+  echo "The MongoDB password must be set; use -p or --password"
   exit 1
 fi
 
-# Add the MongoDB repos to yum
-cat << EOF | sudo tee -a /etc/yum.repos.d/mongodb-org-3.4.repo
-[mongodb-org-3.4]
-name=MongoDB Repository
-baseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/3.4/x86_64/
-gpgcheck=1
-enabled=1
-gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
-EOF
+# Add the Yum repository for MongoDB, if it doesn't exist
+if sudo cat /etc/yum.repos.d/mongodb-org-3.4.repo | grep -q mongodb-org-3.4; then
+  echo "The mongodb-org-3.4 Yum repository is already installed; skipping"
+else
+	cat <<-EOF | sudo tee -a /etc/yum.repos.d/mongodb-org-3.4.repo
+		[mongodb-org-3.4]
+		name=MongoDB Repository
+		baseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/3.4/x86_64/
+		gpgcheck=1
+		enabled=1
+		gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
+	EOF  
+fi
 
 # Install MongoDB
 sudo yum install -y mongodb-org
@@ -141,7 +145,7 @@ until (echo exit | nc -v localhost $mongodb_port 2>&1 | grep "Ncat: Connected to
 
 # Secure MongoDB with a root username and password
 cd ~
-cat << EOF | sudo tee /home/centos/user_and_pass.js
+cat << EOF | sudo tee /home/`whoami`/user_and_pass.js
 use admin
 db.createUser(
   {
@@ -151,8 +155,8 @@ db.createUser(
   }
 )
 EOF
-/usr/bin/mongo localhost:$mongodb_port < /home/centos/user_and_pass.js
-rm -f /home/centos/user_and_pass.js
+/usr/bin/mongo localhost:$mongodb_port < /home/`whoami`/user_and_pass.js
+rm -f /home/`whoami`/user_and_pass.js
 cat << EOF | sudo tee -a /etc/mongod.conf
 
 security:
