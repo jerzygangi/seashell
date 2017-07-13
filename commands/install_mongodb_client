@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+#
+# install_mongodb_client
+#
+# The bare minimum to be able to connect to a remote MongoDB server
+
+# Add the Yum repository for MongoDB, if it doesn't exist
+if sudo cat /etc/yum.repos.d/mongodb-org-3.4.repo | grep -q mongodb-org-3.4; then
+  echo "The mongodb-org-3.4 Yum repository is already installed; skipping"
+else
+	cat <<-EOF | sudo tee -a /etc/yum.repos.d/mongodb-org-3.4.repo
+		[mongodb-org-3.4]
+		name=MongoDB Repository
+		baseurl=https://repo.mongodb.org/yum/redhat/\$releasever/mongodb-org/3.4/x86_64/
+		gpgcheck=1
+		enabled=1
+		gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
+	EOF  
+fi
+
+# Install the MongoDB console
+sudo yum install -y mongodb-org-shell
