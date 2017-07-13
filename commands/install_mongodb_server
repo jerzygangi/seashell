@@ -82,6 +82,7 @@ if [ -z $mongodb_password ]; then
 fi
 
 # Add the Yum repository for MongoDB, if it doesn't exist
+sudo touch /etc/yum.repos.d/mongodb-org-3.4.repo
 if sudo cat /etc/yum.repos.d/mongodb-org-3.4.repo | grep -q mongodb-org-3.4; then
 	echo "The mongodb-org-3.4 Yum repository is already installed; skipping"
 else
