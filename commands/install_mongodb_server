@@ -83,7 +83,7 @@ fi
 
 # Add the Yum repository for MongoDB, if it doesn't exist
 if sudo cat /etc/yum.repos.d/mongodb-org-3.4.repo | grep -q mongodb-org-3.4; then
-  echo "The mongodb-org-3.4 Yum repository is already installed; skipping"
+	echo "The mongodb-org-3.4 Yum repository is already installed; skipping"
 else
 	cat <<-EOF | sudo tee -a /etc/yum.repos.d/mongodb-org-3.4.repo
 		[mongodb-org-3.4]
@@ -92,7 +92,7 @@ else
 		gpgcheck=1
 		enabled=1
 		gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
-	EOF  
+	EOF
 fi
 
 # Install MongoDB
