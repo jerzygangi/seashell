@@ -9,3 +9,4 @@ cat << EOF | sudo tee /etc/sysconfig/selinux
 SELINUX=disabled
 SELINUXTYPE=targeted
 EOF
+echo "Linux requires you restart in order for SELinux to be disabled"
