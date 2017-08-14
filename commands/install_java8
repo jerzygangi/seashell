@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+#
+# install_java8
+#
+# We install the devel package, because the expectation of its presence is commonplace
+
+sudo yum -y install java-1.8.0-openjdk-devel
