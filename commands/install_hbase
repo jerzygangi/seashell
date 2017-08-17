@@ -34,6 +34,9 @@ EOF
 # Start HBase service
 JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:/bin/javac::") ./bin/start-hbase.sh
 
+# Delete the downloaded release
+rm ~/hbase-1.2.6-bin.tar.gz
+
 # N.B. This is how you should stop HBase in the future:
 # JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:/bin/javac::") ./bin/stop-hbase.sh
 
