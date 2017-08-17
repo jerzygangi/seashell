@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+#
+# install_hbase
+#
+# A single-node, local-filesystem HBase, as per:
+# http://hbase.apache.org/book.html#quickstart
+
+cd ~
+
+# Download HBase
+curl -O http://mirrors.koehn.com/apache/hbase/stable/hbase-1.2.6-bin.tar.gz
+tar xzvf ./hbase-1.2.6-bin.tar.gz
+cd hbase-1.2.6
+
+# Configure HBase to use local filesystem
+sudo rm ./conf/hbase-site.xml 2> /dev/null
+cat << EOF | sudo tee ./conf/hbase-site.xml
+<!-- HBase configuration -->
+
+<configuration>
+  <property>
+    <name>hbase.rootdir</name>
+    <value>file:///home/`whoami`/hbase_data</value>
+  </property>
+  <property>
+    <name>hbase.zookeeper.property.dataDir</name>
+    <value>/home/`whoami`/hbase_zookeeper</value>
+  </property>
+</configuration>
+
+EOF
+
+# Start HBase service
+JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:/bin/javac::") ./bin/start-hbase.sh
+
+# N.B. This is how you should stop HBase in the future:
+# JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:/bin/javac::") ./bin/stop-hbase.sh
+
+# N.B. This is how you interact with HBase:
+# JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:/bin/javac::") ./bin/hbase shell
+
+# N.B. This is how you start the REST server on :8080
+# JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:/bin/javac::") ./bin/hbase-daemon.sh start rest
+
+# N.B. This is how you stop the REST server on :8080
+# JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:/bin/javac::") ./bin/hbase-daemon.sh stop rest
+
+# N.B. Connect to the HBase UI with:
+# http://fqdn:16010
