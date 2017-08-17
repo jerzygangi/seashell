@@ -47,4 +47,4 @@ JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:/bin/javac::") ./bin/start-hbase
 # JAVA_HOME=$(readlink -f /usr/bin/javac | sed "s:/bin/javac::") ./bin/hbase-daemon.sh stop rest
 
 # N.B. Connect to the HBase UI with:
-# http://fqdn:16010
+# http://...:16010
