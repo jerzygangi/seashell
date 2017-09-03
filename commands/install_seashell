@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+#
+# install_seashell
+#
+# Prepare this machine for management with Seashell
+#
+
+# Make a parent folder for Seashell configuration files
+sudo mkdir /etc/seashell
+sudo chown `whoami`:`whoami` /etc/seashell
+
+# Make a folder to keep track of which commands have been run
+mkdir /etc/seashell/installs
