@@ -8,6 +8,12 @@
 # that possible
 #
 
-sudo usermod -a -G root `whoami`
+# Denote the start of adding the centos user to the root group
+touch /etc/seashell/installs/add_centos_user_to_root_group.started
 
+# Add the current user (centos) to the root group
+sudo usermod -a -G root `whoami`
 echo "Linux requires you log out and log back in, in order for the group changes to take effect for the `whoami` user"
+
+# Denote the completion of adding the centos user to the root group
+touch /etc/seashell/installs/add_centos_user_to_root_group.finished
