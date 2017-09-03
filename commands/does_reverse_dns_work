@@ -1,0 +1,84 @@
+#!/usr/bin/env bash
+
+#
+# does_reverse_dns_work
+#
+# Check if an IP address resolves to its fully-qualified domain name
+# (This reverse DNS check is Hadoop-compatible)
+#
+
+# Set the default arguments
+ip_address=
+fqdn=
+
+# Keep track of the original arguments passed to this script
+original_arguments=()
+for param in "$@"; do
+  original_arguments+=("$param")
+done
+
+# Explain how to use this script
+usage(){
+	cat <<- EOF
+
+  Usage: does_reverse_dns_work [options]
+
+  Options:
+    -a, --ip_address <ip>             The IP address to check reverse DNS on; e.g., 98.76.54.32
+    -d, --fqdn <domain>               The fully-qualified domain name to check for; e.g., node1.db.example.com
+    -h, --help                        This message
+
+	EOF
+}
+
+# If the user asks for help, print out the usage
+set -- "${original_arguments[@]}"
+while [ "$1" != "" ]; do
+  case $1 in
+    -h | --help )
+      usage
+      exit
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
+
+# Capture the command line arguements from the user
+set -- "${original_arguments[@]}"
+while [ "$1" != "" ]; do
+  case $1 in
+    -a | --ip_address )
+      shift
+      ip_address="$1"
+      shift
+      ;;
+    -d | --fqdn )
+      shift
+      fqdn=$1
+      shift
+      ;;
+    *)
+      usage
+      exit 1
+  esac
+done
+
+# Ensure we have the IP and FQDN before we proceed
+if [ -z $ip_address ]; then
+  echo "The IP address must be set; use -a or --ip_address"
+  exit 1
+fi
+if [ -z $fqdn ]; then
+  echo "The fully-qualified domain name must be set; use -d or --fqdn"
+  exit 1
+fi
+
+# Check if reverse DNS works
+getent hosts $ip_address | grep "$fqdn\$"
+if [ "$?" -eq "0" ]; then
+  echo true
+else
+  echo false
+fi
