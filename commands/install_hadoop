@@ -20,6 +20,9 @@ dependencies=(
 )
 for dependency in "${dependencies[@]}"; do
   installation_status=$(/home/`whoami`/seashell/commands/is_installed "$dependency")
+  echo "----------------"
+  echo "Instalation status is $installation_status"
+  echo "----------------"
   if ! $installation_status; then
     echo "You can't run install_hadoop unless $dependency is installed first."
     exit 1
