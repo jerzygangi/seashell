@@ -76,5 +76,15 @@ while [ "$1" != "" ]; do
   esac
 done
 
+# Ensure we have a valid node type before we proceed
+if [ -z $node_type ]; then
+  echo "The node type to install on this machine must be set; use -t or --node_type"
+  exit 1
+fi
+if ( [ "$node_type" != "NameNode" ] && [ "$node_type" != "ResourceManager" ] && [ "$node_type" != "DataNode+NodeManager" ] ); then
+  echo "The node type must be set to NameNode or ResourceManager or DataNode+NodeManager; use -t or --node_type"
+  exit 1
+fi
+
 # Log out progress
 echo "Starting to install Hadoop as $node_type"
