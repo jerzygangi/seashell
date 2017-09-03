@@ -6,10 +6,10 @@
 # We install the devel package, because the expectation of its presence is commonplace
 
 # Denote the start of installing Java 7
-touch /etc/seashell/installs/java7.started
+touch /etc/seashell/installs/install_java7.started
 
 # Install Java 7
 sudo yum -y install java-1.7.0-openjdk-devel
 
 # Denote the completion of installing Java 7
-touch /etc/seashell/installs/java7.finished
+touch /etc/seashell/installs/install_java7.finished
