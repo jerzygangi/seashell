@@ -16,3 +16,14 @@ function is_installed_ruby {
     echo false
   fi
 }
+
+function is_installed_add_centos_user_to_root_group {
+  # Run command
+  groups `whoami` | grep "root"
+  # Check return status to determine installation
+  if [ "$?" -eq "0" ]; then
+    echo true
+  else
+    echo false
+  fi
+}
