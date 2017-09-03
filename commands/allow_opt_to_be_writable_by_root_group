@@ -8,5 +8,11 @@
 # serve it's purpose of housing add-on application for non-`root` users
 #
 
+# Denote the start of allowing /opt to be writable by the root group
+touch /etc/seashell/installs/allow_opt_to_be_writable_by_root_group.started
+
+# Allow /opt to be writable by root
 sudo chmod 0775 /opt
 
+# Denote the completion of allowing /opt to be writable by the root group
+touch /etc/seashell/installs/allow_opt_to_be_writable_by_root_group.finished
