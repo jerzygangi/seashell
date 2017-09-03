@@ -28,10 +28,6 @@ usage(){
 	EOF
 }
 
-echo "---------------"
-echo "AT TOP I HAVE $1"
-echo "---------------"
-
 # If the user asks for help, print out the usage
 set -- "${original_arguments[@]}"
 while [ "$1" != "" ]; do
@@ -45,16 +41,7 @@ while [ "$1" != "" ]; do
       ;;
   esac
 done
-
-echo "---------------"
-echo "HERE I HAVE $1"
-echo "---------------"
-
 set -- "${original_arguments[@]}"
-
-echo "---------------"
-echo "AFTER I HAVE $1"
-echo "---------------"
 
 # Ensure name of Seashell command is set
 if [ -z "$1" ]; then
@@ -67,7 +54,7 @@ fi
 # Load installation checkers
 # These functions return a boolean reply saying whether a Seashell
 # command is installed or not
-source ./../functions/install_checkers.sh
+source /home/`whoami`/seashell/functions/install_checkers.sh
 
 # Determine which function & arguments we'll need to run to find out if this
 # Seashell command is installed or not.
@@ -75,9 +62,9 @@ source ./../functions/install_checkers.sh
 # command exists, or if we'll be using the default (generic) checker
 checker_command_to_use=
 if [ "$(type -t is_installed_$name_of_seashell_command_to_check)" == "function" ]; then
-  checker_command_to_use="is_installed_$name_of_seashell_command_to_check"
+  checker_command_to_use="/home/`whoami`/seashell/commands/is_installed_$name_of_seashell_command_to_check"
 else
-  checker_command_to_use="is_installed_default $name_of_seashell_command_to_check"
+  checker_command_to_use="/home/`whoami`/seashell/commands/is_installed_default $name_of_seashell_command_to_check"
 fi
 
 # Check to see if command is installed, and echo out the result
