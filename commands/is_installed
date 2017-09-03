@@ -22,6 +22,10 @@ usage(){
 	EOF
 }
 
+echo "---------------"
+echo "AT TOP I HAVE $1"
+echo "---------------"
+
 # If the user asks for help, print out the usage
 set -- "${original_arguments[@]}"
 while [ "$1" != "" ]; do
