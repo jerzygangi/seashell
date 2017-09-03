@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+#
+# is_installed
+#
+# Determines if an command has already been executed on this machine,
+# to achieve idempotence
+#
+
+# Set the default arguments
+name_of_seashell_command_to_check=
+
+# Explain how to use this script
+usage(){
+	cat <<- EOF
+
+  Usage: is_installed [name_of_seashell_command_to_check]
+
+  Options:
+    -h, --help                              This message
+
+	EOF
+}
+
+# If the user asks for help, print out the usage
+set -- "${original_arguments[@]}"
+while [ "$1" != "" ]; do
+  case $1 in
+    -h | --help )
+      usage
+      exit
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
+
+# Ensure name of Seashell command is set
+if [ -z "$1" ]; then
+  echo "The name of the seashell command to check must be provided; use is_installed [name_of_seashell_command_to_check]"
+  exit 1
+else
+  name_of_seashell_command_to_check=$1
+fi
+
+# Load installation checkers
+# These functions return a boolean reply saying whether a Seashell
+# command is installed or not
+source ./../functions/install_checkers.sh
+
+# Determine which function & arguments we'll need to run to find out if this
+# Seashell command is installed or not.
+# To accomplish this, we determin if a specific checker for this Seashell
+# command exists, or if we'll be using the default (generic) checker
+checker_command_to_use=
+if [ "$(type -t is_installed_$name_of_seashell_command_to_check)" == "function" ]; then
+  checker_command_to_use="is_installed_$name_of_seashell_command_to_check"
+else
+  checker_command_to_use="is_installed_default $name_of_seashell_command_to_check"
+fi
+
+# Check to see if command is installed, and echo out the result
+echo ${checker_command_to_use}
