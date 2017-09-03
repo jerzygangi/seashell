@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+
+#
+# install_hadoop
+#
+# Install Hadoop as a fully distributed cluster, assigning this machine a specific node type
+#
+# Based on
+# https://hadoop.apache.org/docs/r2.7.2/hadoop-project-dist/hadoop-common/ClusterSetup.html
+# https://hadoop.apache.org/docs/r2.7.2/hadoop-project-dist/hadoop-common/SingleCluster.html
+#
+
+# Ensure dependencies are installed before we install Hadoop
+dependencies=(
+  "baseline"
+  "allow_opt_to_be_writable_by_root_group"
+  "add_centos_user_to_root_group"
+  "install_java7"
+  "disable_selinux"
+)
+for dependency in "${dependencies[@]}"; do
+  installation_status=$(/home/`whoami`/seashell/commands/is_installed "$dependency")
+  if ! $installation_status; then
+    echo "You can't run install_hadoop unless $dependency is installed first."
+    exit 1
+  fi
+done
+
+# Set the default arguments
+node_type=
+
+# Keep track of the original arguments passed to this script
+original_arguments=()
+for param in "$@"; do
+  original_arguments+=("$param")
+done
+
+# Explain how to use this script
+usage(){
+	cat <<- EOF
+
+  Usage: install_airflow [options]
+
+  Options:
+    -t, --node_type <type>            The type of Hadoop node to configure: NameNode, ResourceManager, or DataNode+NodeManager
+    -h, --help                        This message
+	EOF
+}
+
+# If the user asks for help, print out the usage
+set -- "${original_arguments[@]}"
+while [ "$1" != "" ]; do
+  case $1 in
+    -h | --help )
+      usage
+      exit
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
+
+# Capture the command line arguements from the user
+set -- "${original_arguments[@]}"
+while [ "$1" != "" ]; do
+  case $1 in
+    -t | --node_type )
+      shift
+      node_type=$1
+      shift
+      ;;
+    *)
+      usage
+      exit 1
+  esac
+done
+
+# Log out progress
+echo "Starting to install Hadoop as $node_type"
