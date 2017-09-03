@@ -10,6 +10,12 @@
 # Set the default arguments
 name_of_seashell_command_to_check=
 
+# Keep track of the original arguments passed to this script
+original_arguments=()
+for param in "$@"; do
+  original_arguments+=("$param")
+done
+
 # Explain how to use this script
 usage(){
 	cat <<- EOF
@@ -42,6 +48,12 @@ done
 
 echo "---------------"
 echo "HERE I HAVE $1"
+echo "---------------"
+
+set -- "${original_arguments[@]}"
+
+echo "---------------"
+echo "AFTER I HAVE $1"
 echo "---------------"
 
 # Ensure name of Seashell command is set
