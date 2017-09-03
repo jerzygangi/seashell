@@ -62,9 +62,9 @@ source /home/`whoami`/seashell/functions/install_checkers.sh
 # command exists, or if we'll be using the default (generic) checker
 checker_command_to_use=
 if [ "$(type -t is_installed_$name_of_seashell_command_to_check)" == "function" ]; then
-  checker_command_to_use="/home/`whoami`/seashell/commands/is_installed_$name_of_seashell_command_to_check"
+  checker_command_to_use="is_installed_$name_of_seashell_command_to_check"
 else
-  checker_command_to_use="/home/`whoami`/seashell/commands/is_installed_default $name_of_seashell_command_to_check"
+  checker_command_to_use="is_installed_default $name_of_seashell_command_to_check"
 fi
 
 # Check to see if command is installed, and echo out the result
