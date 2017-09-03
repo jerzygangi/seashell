@@ -11,7 +11,7 @@ Seashell is a configuration management toolkit for bootstrapping disposable infr
 5. Use the server
 
 For a super-fast way to set up a new server with the Seashell repo, just run:
-`curl https://gist.githubusercontent.com/jerzygangi/4a5f5fc48f8c3996bd8dc539b57c6e02/raw/install.sh | bash -`
+`curl https://gist.githubusercontent.com/jerzygangi/4a5f5fc48f8c3996bd8dc539b57c6e02/raw/342a9a59e65ecf61da3739f1273aff2d5672d091/install.sh | bash -`
 
 ## How does Seashell work?
 Seashell is a collection of popular sysadmin tasks: installing Nginx, installing Python, setting up a daemon, etc. Rather than trying to support a million different versions of Nginx, or a million different ways to set up a daemon, Seashell uses the most popular, stable way. Because we limit package versions, **you can install any combination of services, and everything is compatible with everything else -- guaranteed.** If you've ever set up a server, this will make you cry in joy.
