@@ -35,7 +35,10 @@ while [ "$1" != "" ]; do
       ;;
   esac
 done
-set -- "${original_arguments[@]}"
+
+echo "---------------"
+echo "HERE I HAVE $1"
+echo "---------------"
 
 # Ensure name of Seashell command is set
 if [ -z "$1" ]; then
