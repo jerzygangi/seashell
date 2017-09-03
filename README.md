@@ -23,14 +23,19 @@ And, really, do you *need* multiple versions of Nginx? :)
 ## What can Seashell do?
 - Bootstrap CentOS 7
 - Install Python 2
+- Install Java 7
+- Install Java 8
 - Install the PostgreSQL client
 - Install the MySQL client
 - Install the Oracle client
 - Install the Microsoft SQL client
+- Install MongoDB database
+- Install the MongoDB client
 - Install Airflow
 - Install SupervisorD
 - Daemonize a process, like Airflow
 - Install Redis, as a master server
+- Install a fully distributed Hadoop cluster
 - Make /opt writable by the root group
 - Add your user to the root group
 
