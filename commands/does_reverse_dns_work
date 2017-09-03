@@ -76,7 +76,7 @@ if [ -z $fqdn ]; then
 fi
 
 # Check if reverse DNS works
-getent hosts $ip_address | grep "$fqdn\$"
+getent hosts $ip_address | grep "$fqdn\$" &> /dev/null
 if [ "$?" -eq "0" ]; then
   echo true
 else
