@@ -30,7 +30,7 @@ function is_installed_add_centos_user_to_root_group {
 
 function is_installed_disable_selinux {
   # Run command
-  getenforce | grep "Enforcing" &> /dev/null
+  getenforce | grep "Disabled" &> /dev/null
   # Check return status to determine installation
   if [ "$?" -eq "0" ]; then
     echo true
