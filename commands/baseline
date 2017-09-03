@@ -5,8 +5,14 @@
 #
 # All systems we work with should have some sane basline packages and updates
 
+# Denote the start of installing baseline
+touch /etc/seashell/installs/baseline.started
+
 # Update CentOS
 sudo yum -y update
 
 # Install the development tools bundle
 sudo yum groupinstall -y 'development tools'
+
+# Denote the completion of installing baseline
+touch /etc/seashell/installs/baseline.finished
