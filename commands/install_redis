@@ -124,7 +124,7 @@ sudo make install
 
 # Build the master Redis configuration
 sudo mkdir /etc/redis/
-sudo chown centos:centos /etc/redis
+sudo chown `whoami`:`whoami` /etc/redis
 cat << EOF | sudo tee /etc/redis/redis.conf
 # Redis configuration
 
@@ -181,7 +181,7 @@ maxmemory $memory_limit
 maxmemory-policy noeviction
 
 EOF
-sudo chown centos:centos /etc/redis/redis.conf
+sudo chown `whoami`:`whoami` /etc/redis/redis.conf
 
 # Allow Redis to open more than 4,000-ish file descriptors (the OS default)
 cat << EOF | sudo tee /etc/security/limits.d/redis.conf
@@ -230,7 +230,7 @@ cat << EOF | sudo tee /etc/redis/turn_off_transparent_hugepage
 echo never | sudo tee /sys/kernel/mm/transparent_hugepage/enabled
 
 EOF
-sudo chown centos:centos /etc/redis/turn_off_transparent_hugepage
+sudo chown `whoami`:`whoami` /etc/redis/turn_off_transparent_hugepage
 sudo chmod 0744 /etc/redis/turn_off_transparent_hugepage
 cat << EOF | sudo tee /etc/systemd/system/turn_off_transparent_hugepage.service
 # Turn off THP (Transparent Huge Pages), which can cause latency in Redis
@@ -256,14 +256,14 @@ rm -rf /tmp/install_redis
 # Make a script that can start Redis with all environmental variables
 # (Perfect for use in non-interactive shells without Virtualenv's activate)
 sudo mkdir /opt/redis
-sudo chown centos:centos /opt/redis
+sudo chown `whoami`:`whoami` /opt/redis
 cat << EOF | sudo tee /opt/redis/start_redis
 #!/usr/bin/env bash
 
 /usr/local/bin/redis-server /etc/redis/redis.conf
 
 EOF
-sudo chown centos:centos /opt/redis/start_redis
+sudo chown `whoami`:`whoami` /opt/redis/start_redis
 chmod +x /opt/redis/start_redis
 
 # N.B. Start redis with redis-server /etc/redis/redis.conf or /opt/redis/start_redis
