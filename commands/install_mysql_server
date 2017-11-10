@@ -3,6 +3,9 @@
 #
 # install_mysql_server
 #
+# This is intenended for localhost/development/Vagrant usage only; it is not hardened
+# for production traffic
+#
 
 # Create a temporary directory at /tmp/install_mysql_client
 mkdir /tmp/install_mysql_server
