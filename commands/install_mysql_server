@@ -57,4 +57,8 @@ send \"Y\r\"
 expect eof
 "
 
+# Set the root password to nothing, since this script is for development environments
+# where application servers (Django, Rails, Node, etc.) may expect that
+mysql -u root --password="$random_root_mysql_password" -e "uninstall plugin validate_password; SET PASSWORD FOR root@localhost=PASSWORD('');"
+
 # N.B. MySQL is automatically started at boot
