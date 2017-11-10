@@ -14,5 +14,8 @@ sudo yum -y update
 # Install the development tools bundle
 sudo yum groupinstall -y 'development tools'
 
+# Install Expect
+sudo yum -y install expect
+
 # Denote the completion of installing baseline
 touch /etc/seashell/installs/baseline.finished
