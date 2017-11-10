@@ -26,8 +26,30 @@ sudo systemctl start mysqld
 sudo systemctl status mysqld
 
 # Save the random root password into the user's home directory
+random_root_mysql_password=$(grep 'temporary.*root@localhost' /var/log/mysqld.log | tail -n 1 | sed 's/.*root@localhost: //')
 cat << EOF | tee ~/mysql_root_password > /dev/null
-$(grep 'temporary.*root@localhost' /var/log/mysqld.log | tail -n 1 | sed 's/.*root@localhost: //')
+$random_root_mysql_password
 EOF
+
+# Configure MySQL
+expect -c "
+set timeout 10
+spawn mysql_secure_installation
+expect \"Enter password for user root: \"
+send \"$random_root_mysql_password\r\"
+expect \"New password: \"
+send \"$random_root_mysql_password\r\"
+expect \"Change the password for root ? ((Press y|Y for Yes, any other key for No) : \"
+send \"N\r\"
+expect \"Remove anonymous users? (Press y|Y for Yes, any other key for No) : \"
+send \"Y\r\"
+expect \"Disallow root login remotely? (Press y|Y for Yes, any other key for No) : \"
+send \"N\r\"
+expect \"Remove test database and access to it? (Press y|Y for Yes, any other key for No) : \"
+send \"Y\r\"
+expect \"Reload privilege tables now? (Press y|Y for Yes, any other key for No) : \"
+send \"Y\r\"
+expect eof
+"
 
 # N.B. MySQL is automatically started at boot
