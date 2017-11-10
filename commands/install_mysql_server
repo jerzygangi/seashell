@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+#
+# install_mysql_server
+#
+
+# Create a temporary directory at /tmp/install_mysql_client
+mkdir /tmp/install_mysql_server
+cd /tmp/install_mysql_server
+
+# Download the MySQL server from Oracle
+curl -L -O https://dev.mysql.com/get/mysql57-community-release-el7-11.noarch.rpm
+
+# Install the MySQL 5.7 server
+sudo rpm -ivh mysql57-community-release-el7-11.noarch.rpm
+sudo yum -y install mysql-server
+
+# Delete the temporary directory, since we're done with it
+cd ~
+rm -rf /tmp/install_mysql_server
+
+# Start MySQL Server
+sudo systemctl start mysqld
+
+# Echo the status of MySQL Server to STDOUT, to prove it started
+sudo systemctl status mysqld
+
+# Save the random root password into the user's home directory
+cat << EOF | tee ~/mysql_root_password > /dev/null
+$(grep 'temporary.*root@localhost' /var/log/mysqld.log | tail -n 1 | sed 's/.*root@localhost: //')
+EOF
+
+# N.B. MySQL is automatically started at boot
