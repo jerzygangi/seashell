@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+#
+# install_imagemagick
+#
+
+sudo yum install -y ImageMagick ImageMagick-devel
