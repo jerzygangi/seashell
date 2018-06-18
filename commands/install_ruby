@@ -6,7 +6,7 @@
 # Download the current version of ruby, or a specific version, and install it using RVM
 
 # Set the default arguments
-ruby_version_x_y_z="latest"
+ruby_version_x_y_z=
 
 # Keep track of the original arguments passed to this script
 original_arguments=()
@@ -57,7 +57,7 @@ done
 
 # Install Ruby with RVM
 curl -sSL https://rvm.io/mpapis.asc | gpg --import -
-curl -sSL https://get.rvm.io | bash -s stable --ruby=$ruby_version_x_y_z
+curl -sSL https://get.rvm.io | bash -s stable --ruby$(if [ $ruby_version_x_y_z ]; then echo "=${ruby_version_x_y_z}"; fi)
 
 # Update the env for the current session
 source /home/`whoami`/.rvm/scripts/rvm
