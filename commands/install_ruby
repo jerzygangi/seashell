@@ -57,7 +57,7 @@ done
 
 # Install Ruby with RVM
 curl -sSL https://rvm.io/mpapis.asc | gpg --import -
-curl -sSL https://get.rvm.io | bash -s stable --version $ruby_version_x_y_z
+curl -sSL https://get.rvm.io | bash -s stable --ruby=$ruby_version_x_y_z
 
 # Update the env for the current session
 source /home/`whoami`/.rvm/scripts/rvm
