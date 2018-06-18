@@ -3,11 +3,61 @@
 #
 # install_ruby
 #
-# Download the current version of ruby, and install it using RVM
+# Download the current version of ruby, or a specific version, and install it using RVM
+
+# Set the default arguments
+ruby_version_x_y_z="latest"
+
+# Keep track of the original arguments passed to this script
+original_arguments=()
+for param in "$@"; do
+  original_arguments+=("$param")
+done
+
+# Explain how to use this script
+usage(){
+	cat <<- EOF
+
+  Usage: install_ruby [options]
+
+  Options:
+    -v, --version <x.y.z>                   The x.y.z version number of Ruby to install; defaults to the latest tagged Ruby version
+    -h, --help                              This message
+	EOF
+}
+
+# If the user asks for help, print out the usage
+set -- "${original_arguments[@]}"
+while [ "$1" != "" ]; do
+  case $1 in
+    -h | --help )
+      usage
+      exit
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
+
+# Capture the command line arguements from the user
+set -- "${original_arguments[@]}"
+while [ "$1" != "" ]; do
+  case $1 in
+    -v | --version )
+      shift
+      ruby_version_x_y_z=$1
+      shift
+      ;;
+    *)
+      usage
+      exit 1
+  esac
+done
 
 # Install Ruby with RVM
 curl -sSL https://rvm.io/mpapis.asc | gpg --import -
-curl -sSL https://raw.githubusercontent.com/wayneeseguin/rvm/stable/binscripts/rvm-installer | bash -s stable --ruby
+curl -sSL https://get.rvm.io | bash -s stable --version $ruby_version_x_y_z
 
 # Update the env for the current session
 source /home/`whoami`/.rvm/scripts/rvm
