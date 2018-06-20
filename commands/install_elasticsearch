@@ -92,3 +92,13 @@ if [ $jvm_heapsize ]; then
   sudo sed -i "s/^-Xms.*/-Xms$jvm_heapsize/" /etc/elasticsearch/jvm.options
   sudo sed -i "s/^-Xmx.*/-Xmx$jvm_heapsize/" /etc/elasticsearch/jvm.options
 fi
+sudo systemctl start elasticsearch.service
+
+# Start Elasticsearch when the system starts
+sudo /bin/systemctl daemon-reload
+sudo /bin/systemctl enable elasticsearch.service
+
+# N.B. This is how you should start and stop Elasticsearch in the future
+# sudo systemctl start elasticsearch.service
+# sudo systemctl stop elasticsearch.service
+# whose output can be found in /var/log/elasticsearch/
