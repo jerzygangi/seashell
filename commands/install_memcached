@@ -8,3 +8,18 @@
 # Install Memcached & related tools
 sudo yum -y install memcached
 sudo yum -y install libmemcached
+sudo systemctl start memcached
+
+# Start Memcached when the system starts
+sudo /bin/systemctl daemon-reload
+sudo /bin/systemctl enable memcached
+
+# N.B. This is how you should start and stop Memcached in the future
+# sudo systemctl start memcached
+# sudo systemctl stop memcached
+# sudo systemctl restart memcached
+
+# N.B. To determine if Memcached is running
+# memstat --servers="127.0.0.1"
+# or
+# sudo netstat -plunt
