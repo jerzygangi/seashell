@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+#
+# install_memcached
+#
+# Install the current yum-distributed Memcached
+
+# Install Memcached & related tools
+sudo yum -y install memcached
+sudo yum -y install libmemcached
