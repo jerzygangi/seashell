@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+
+#
+# install_elasticsearch
+#
+# Install the current Elasticsearch from Elastic's repositories
+#
+# See https://www.elastic.co/guide/en/elasticsearch/reference/current/rpm.html
+
+# Set the default arguments
+jvm_heapsize=
+
+# Keep track of the original arguments passed to this script
+original_arguments=()
+for param in "$@"; do
+  original_arguments+=("$param")
+done
+
+# Explain how to use this script
+usage(){
+	cat <<- EOF
+
+  Usage: install_elasticsearch [options]
+
+  Options:
+    -h, --heapsize <size>                   Using the syntax below, the initial & maximum memory for the JVM
+    -h, --help                              This message
+
+  Memory syntax:
+    The default size is measured in bytes. Follow the usual form of 1k, 5G, 4M, etc. Specifically:
+    1k == 1000 bytes
+    1K == 1000 bytes
+    1m == 1000000 bytes
+    1M == 1000000 bytes
+    1g => 1000000000 bytes
+    1G => 1000000000 bytes
+    N.B. Units are case insensitive, so 1G and 1g are the same
+  EOF
+}
+
+# If the user asks for help, print out the usage
+set -- "${original_arguments[@]}"
+while [ "$1" != "" ]; do
+  case $1 in
+    -h | --help )
+      usage
+      exit
+      ;;
+    *)
+      shift
+      ;;
+  esac
+done
+
+# Capture the command line arguements from the user
+set -- "${original_arguments[@]}"
+while [ "$1" != "" ]; do
+  case $1 in
+    -h | --heapsize )
+      shift
+      jvm_heapsize=$1
+      shift
+      ;;
+    *)
+      usage
+      exit 1
+  esac
+done
+
+# Install the Elasticsearch PGP key
+sudo rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+# Add the Elasticsearch Yum repo
+cat << EOF | sudo tee /etc/yum.repos.d/elasticsearch.repo
+[elasticsearch-6.x]
+name=Elasticsearch repository for 6.x packages
+baseurl=https://artifacts.elastic.co/packages/6.x/yum
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md
+
+EOF
+
+# Install Elasticsearch
+sudo yum -y install elasticsearch
+
+# If requested, change the initial & maximum JVM heapsize
+if [ $jvm_heapsize ]; then
+  sudo sed -i "s/^-Xms.*/-Xms$jvm_heapsize/" /etc/elasticsearch/jvm.options
+  sudo sed -i "s/^-Xmx.*/-Xmx$jvm_heapsize/" /etc/elasticsearch/jvm.options
+fi
