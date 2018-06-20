@@ -20,22 +20,23 @@ done
 usage(){
 	cat <<- EOF
 
-  Usage: install_elasticsearch [options]
+	Usage: install_elasticsearch [options]
 
-  Options:
-    -h, --heapsize <size>                   Using the syntax below, the initial & maximum memory for the JVM
-    -h, --help                              This message
+	Options:
+		-s, --heapsize <size>                   Using the syntax below, the initial & maximum memory for the JVM
+		-h, --help                              This message
 
-  Memory syntax:
-    The default size is measured in bytes. Follow the usual form of 1k, 5G, 4M, etc. Specifically:
-    1k == 1000 bytes
-    1K == 1000 bytes
-    1m == 1000000 bytes
-    1M == 1000000 bytes
-    1g => 1000000000 bytes
-    1G => 1000000000 bytes
-    N.B. Units are case insensitive, so 1G and 1g are the same
-  EOF
+	Memory syntax:
+		The default size is measured in bytes. Follow the usual form of 1k, 5G, 4M, etc. Specifically:
+		1k == 1000 bytes
+		1K == 1000 bytes
+		1m == 1000000 bytes
+		1M == 1000000 bytes
+		1g => 1000000000 bytes
+		1G => 1000000000 bytes
+		N.B. Units are case insensitive, so 1G and 1g are the same
+
+	EOF
 }
 
 # If the user asks for help, print out the usage
@@ -56,7 +57,7 @@ done
 set -- "${original_arguments[@]}"
 while [ "$1" != "" ]; do
   case $1 in
-    -h | --heapsize )
+    -s | --heapsize )
       shift
       jvm_heapsize=$1
       shift
