@@ -101,4 +101,5 @@ sudo /bin/systemctl enable elasticsearch.service
 # N.B. This is how you should start and stop Elasticsearch in the future
 # sudo systemctl start elasticsearch.service
 # sudo systemctl stop elasticsearch.service
+# sudo systemctl restart elasticsearch.service
 # whose output can be found in /var/log/elasticsearch/
