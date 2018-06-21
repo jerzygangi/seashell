@@ -265,6 +265,5 @@ cat << EOF | sudo tee /opt/redis/start_redis
 EOF
 sudo chown `whoami`:`whoami` /opt/redis/start_redis
 chmod +x /opt/redis/start_redis
-/opt/redis/start_redis
 
 # N.B. Start redis with redis-server /etc/redis/redis.conf or /opt/redis/start_redis
