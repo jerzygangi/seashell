@@ -7,4 +7,9 @@
 #
 # See https://devcenter.heroku.com/articles/heroku-cli
 
-curl https://cli-assets.heroku.com/install.sh | sh
+# This is the only functional way to install Heroku on CentOS:
+# - "snap" doesn't suppor CentOS
+# - the "cli-assets.heroku.com/install.sh" script has bugs
+# - the Tarballs have no installation instructions
+# - there is no yum repository or distribution
+npm install -g heroku
