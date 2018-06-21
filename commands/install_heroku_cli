@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+#
+# install_heroku_cli
+#
+# Install the Heroku CLI
+#
+# See https://devcenter.heroku.com/articles/heroku-cli
+
+curl https://cli-assets.heroku.com/install.sh | sh
