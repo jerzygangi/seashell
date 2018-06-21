@@ -32,7 +32,7 @@ supervisor.rpcinterface_factory = supervisor.rpcinterface:make_main_rpcinterface
 [supervisord]
 logfile=/var/log/supervisord/supervisord_main.log
 pidfile=/tmp/supervisord.pid
-user=centos
+user=`whoami`
 
 ; Point supervisorctl to the supervisord socket
 ; (Think of supervisord as a server, and supervisorctl as a client that needs to
@@ -56,11 +56,11 @@ sudo rm -rf /var/log/supervisor
 # N.B., this happens to be the same as the directory CentOS ships with (above), but
 # we recreate it just to be safe and explicit
 sudo mkdir /var/log/supervisord
-sudo chown centos:centos /var/log/supervisord
+sudo chown `whoami`:`whoami` /var/log/supervisord
 
 # Make a directory where we'll store daemon configuration files for Supervisord
 sudo mkdir /etc/supervisord.d/conf.d
-sudo chown centos:centos /etc/supervisord.d/conf.d
+sudo chown `whoami`:`whoami` /etc/supervisord.d/conf.d
 
 # Finally, start Supervisord
 supervisord
