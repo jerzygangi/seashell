@@ -7,6 +7,7 @@
 # they crash
 
 # Install Supervisord
+sudo yum -y install epel-release
 sudo yum -y install supervisor
 
 # Start Supervisord when the server starts
