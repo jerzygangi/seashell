@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+#
+# install_chrome_headless
+#
+# Install Chrome and ChromeDriver for headless CLI interaction
+#
+# See https://gist.github.com/xiaol825/625b94f97c0580c0586ded2b8f0d76e2
+
+# Add the Chrome Yum repo
+cat << EOF | sudo tee /etc/yum.repos.d/google-chrome.repo
+[google-chrome]
+name=google-chrome
+baseurl=http://dl.google.com/linux/chrome/rpm/stable/x86_64
+enabled=1
+gpgcheck=1
+gpgkey=https://dl-ssl.google.com/linux/linux_signing_key.pub
+
+EOF
+
+# Install Chrome
+sudo yum install -y google-chrome-stable
+
+# Create a temporary directory for ChromeDriver at /tmp/install_chrome_headless
+mkdir /tmp/install_chrome_headless
+cd /tmp/install_chrome_headless
+
+# Download & Install ChromeDriver
+curl -O https://chromedriver.storage.googleapis.com/2.35/chromedriver_linux64.zip
+unzip ./chromedriver_linux64.zip
+sudo mv -f ./chromedriver /usr/local/bin/chromedriver
+sudo chown root:root /usr/local/bin/chromedriver
+sudo chmod 0755 /usr/local/bin/chromedriver
+
+# Delete the temporary directory, since we're done with it
+rm -rf /tmp/install_chrome_headless
