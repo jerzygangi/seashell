@@ -7,6 +7,12 @@
 #
 # See https://facebook.github.io/watchman/docs/install.html
 
+# Install dependencies
+sudo yum -y install openssl-devel
+sudo yum -y install autoconf
+sudo yum -y install automake
+sudo yum -y install libtool
+
 # Create a temporary directory at /tmp/install_watchman
 mkdir /tmp/install_watchman
 cd /tmp/install_watchman
