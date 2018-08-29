@@ -33,6 +33,7 @@ And, really, do you *need* multiple versions of Nginx? :)
 - Install the MongoDB client
 - Install Airflow
 - Install SupervisorD
+- Install Watchman
 - Daemonize a process, like Airflow
 - Install Redis, as a master server
 - Install a fully distributed Hadoop cluster

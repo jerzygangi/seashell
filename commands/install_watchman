@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+#
+# install_watchman
+# 
+# This command does not install Python bindings
+#
+# See https://facebook.github.io/watchman/docs/install.html
+
+# Create a temporary directory at /tmp/install_watchman
+mkdir /tmp/install_watchman
+cd /tmp/install_watchman
+
+# Download Watchman source
+git clone https://github.com/facebook/watchman.git
+cd watchman
+git checkout v4.9.0 # current stable release as of Aug 29, 2018
+
+# Configure, build, & compile
+./autogen.sh
+./configure --without-python
+make
+sudo make install
+
+# Delete the temporary directory, since we're done with it
+rm -rf /tmp/install_watchman
